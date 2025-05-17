@@ -8,7 +8,6 @@ import CommunityPage from '../pages/CommunityPage';
 import ToolsPage from '../pages/ToolsPage';
 import ContactPage from '../pages/ContactPage';
 
-
 export default function AppRoutes() {
   return (
     <Routes>
