@@ -1,4 +1,3 @@
-// src/pages/ConsumptionPage.js
 import React, { useState } from 'react';
 import {
   Container,

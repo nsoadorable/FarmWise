@@ -1,4 +1,3 @@
-// src/data/seasonalProduce.js
 const seasonalData = [
   { month: 'Jan', items: 5 },
   { month: 'Feb', items: 6 },

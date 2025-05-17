@@ -1,4 +1,3 @@
-// src/pages/EcoPracticesPage.js
 import React from 'react';
 import { Container, Typography, Grid, Card, CardContent, Box } from '@mui/material';
 import {

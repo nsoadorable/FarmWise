@@ -1,4 +1,3 @@
-// src/data/caseStudies.js
 const caseStudies = [
   {
     id: 1,
