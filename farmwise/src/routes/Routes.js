@@ -7,6 +7,8 @@ import ConsumptionPage from '../pages/ConsumptionPage';
 import CommunityPage from '../pages/CommunityPage';
 import ToolsPage from '../pages/ToolsPage';
 import ContactPage from '../pages/ContactPage';
+import SignupPage  from '../pages/SignupPage';
+import LoginPage   from '../pages/LoginPage';
 
 export default function AppRoutes() {
   return (
@@ -18,6 +20,8 @@ export default function AppRoutes() {
       <Route path="/community" element={<CommunityPage />} />
       <Route path="/tools" element={<ToolsPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login"  element={<LoginPage />} />
     </Routes>
   );
 }

@@ -1,57 +1,67 @@
 const express = require('express');
-const cors    = require('cors');
-const pool    = require('./db');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const pool = require('./db');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors(), express.json());
 
-app.get('/api/comments', async (req, res) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM comments ORDER BY created_at DESC'
-  );
-  res.json(rows);
+// SIGN UP
+app.post('/api/auth/signup', async (req, res) => {
+  const { email, password } = req.body;
+  // Validation
+  if (!/\S+@\S+\.\S+/.test(email) || password.length < 6) {
+    return res.status(400).json({ error: 'Invalid email or password too short.' });
+  }
+  // Hash
+  const hash = await bcrypt.hash(password, 12);
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO users (email, password_hash) VALUES (?, ?)',
+      [email, hash]
+    );
+    res.status(201).json({ id: result.insertId, email });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'Email already in use.' });
+    }
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
-app.post('/api/comments', async (req, res) => {
-  const { name, email, comment } = req.body;
-  const [result] = await pool.query(
-    `INSERT INTO comments (name, email, comment)
-     VALUES (?, ?, ?)`,
-    [name, email, comment]
+// LOG IN
+app.post('/api/auth/login', async (req, res) => {
+  const { email, password } = req.body;
+  // Fetch user
+  const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+  if (rows.length === 0) {
+    return res.status(401).json({ error: 'Invalid credentials.' });
+  }
+  const user = rows[0];
+  // Compare
+  const match = await bcrypt.compare(password, user.password_hash);
+  if (!match) return res.status(401).json({ error: 'Invalid credentials.' });
+  // Issue JWT
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
   );
-
-  const [newRow] = await pool.query(
-    'SELECT * FROM comments WHERE id = ?',
-    [result.insertId]
-  );
-  res.status(201).json(newRow[0]);
+  res.json({ token, user: { id: user.id, email: user.email } });
 });
 
-app.put('/api/comments/:id', async (req, res) => {
-  const { id }       = req.params;
-  const { name, email, comment } = req.body;
-  await pool.query(
-    `UPDATE comments
-     SET name = ?, email = ?, comment = ?
-     WHERE id = ?`,
-    [name, email, comment, id]
-  );
-  const [updated] = await pool.query(
-    'SELECT * FROM comments WHERE id = ?',
-    [id]
-  );
-  res.json(updated[0]);
+// Example of a protected route (optional)
+app.get('/api/auth/me', async (req, res) => {
+  const auth = req.headers.authorization?.split(' ')[1];
+  if (!auth) return res.sendStatus(401);
+  try {
+    const payload = jwt.verify(auth, process.env.JWT_SECRET);
+    res.json({ id: payload.id, email: payload.email });
+  } catch {
+    res.sendStatus(401);
+  }
 });
 
-app.delete('/api/comments/:id', async (req, res) => {
-  const { id } = req.params;
-  await pool.query('DELETE FROM comments WHERE id = ?', [id]);
-  res.sendStatus(204);
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Comments API running on port ${PORT}`);
-});
+app.listen(5000, () => console.log('API running on port 5000'));
