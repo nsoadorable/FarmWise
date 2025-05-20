@@ -12,23 +12,54 @@ export default function RegistrationPage() {
     password: '',
     confirmPassword: ''
   });
+
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const { dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
+  // Validate fields and return an object with error messages
+  const validate = () => {
+    const errs = {};
+
+    if (!form.firstName.trim()) errs.firstName = 'First name is required.';
+    if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
+
+    if (!form.email.trim()) {
+      errs.email = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      errs.email = 'Invalid email address.';
+    }
+
+    if (!form.password) {
+      errs.password = 'Password is required.';
+    } else if (form.password.length < 8) {
+      errs.password = 'Password must be at least 8 characters.';
+    } else if (form.password !== form.confirmPassword) {
+      errs.confirmPassword = 'Passwords do not match.';
+    }
+
+    return errs;
+  };
+
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' });
+    setError('');
+    setSuccess('');
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     setError('');
     setSuccess('');
-
-    if (form.password !== form.confirmPassword) {
-      return setError("Passwords do not match.");
-    }
 
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
 
@@ -39,14 +70,22 @@ export default function RegistrationPage() {
         fullName: fullName,
         email: form.email,
         password: form.password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
 
-      setSuccess('Account created successfully!');
-      navigate('/');
+      setSuccess('Account created successfully! Redirecting...');
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed.');
+      console.error('Registration error:', err);
+      const errorMessage = err.response?.data?.error || 
+                         err.response?.data?.message || 
+                         'Registration failed. Please try again.';
+      setError(errorMessage);
     }
   };
 
@@ -55,56 +94,63 @@ export default function RegistrationPage() {
       <Typography variant="h5" gutterBottom>Register</Typography>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-      <Box component="form" onSubmit={handleSubmit}>
+      <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           name="firstName"
-          label="First Name"
+          label="First Name *"
           fullWidth
-          required
           value={form.firstName}
           onChange={handleChange}
+          error={!!errors.firstName}
+          helperText={errors.firstName}
           sx={{ mb: 2 }}
         />
         <TextField
           name="lastName"
-          label="Last Name"
+          label="Last Name *"
           fullWidth
-          required
           value={form.lastName}
           onChange={handleChange}
+          error={!!errors.lastName}
+          helperText={errors.lastName}
           sx={{ mb: 2 }}
         />
         <TextField
           name="email"
-          label="Email"
+          label="Email *"
           type="email"
           fullWidth
-          required
           value={form.email}
           onChange={handleChange}
+          error={!!errors.email}
+          helperText={errors.email}
           sx={{ mb: 2 }}
         />
         <TextField
           name="password"
-          label="Password"
+          label="Password *"
           type="password"
           fullWidth
-          required
           value={form.password}
           onChange={handleChange}
+          error={!!errors.password}
+          helperText={errors.password || 'At least 8 characters'}
           sx={{ mb: 2 }}
         />
         <TextField
           name="confirmPassword"
-          label="Confirm Password"
+          label="Confirm Password *"
           type="password"
           fullWidth
-          required
           value={form.confirmPassword}
           onChange={handleChange}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword}
           sx={{ mb: 2 }}
         />
-        <Button type="submit" variant="contained" fullWidth>Register</Button>
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          REGISTER
+        </Button>
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
           Already have an account? <Link href="/login">Log in</Link>
         </Typography>
