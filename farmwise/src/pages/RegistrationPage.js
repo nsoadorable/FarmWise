@@ -44,15 +44,14 @@ export default function RegistrationPage() {
       errs.password = 'Password must be at least 8 characters.';
     }
 
-    if (form.password !== form.confirmPassword) {
+    if (!form.confirmPassword) {
+      errs.confirmPassword = 'Please confirm your password.';
+    } else if (form.password !== form.confirmPassword) {
       errs.confirmPassword = 'Passwords do not match.';
     }
 
     return errs;
   };
-
-  // Helper to check if form is valid (no validation errors)
-  const isFormValid = () => Object.keys(validate()).length === 0;
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -73,38 +72,50 @@ export default function RegistrationPage() {
     setSuccess('');
     setLoading(true);
 
-    const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
-
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        fullName,
-        email: form.email,
+      const res = await axios.post('/api/auth/register', {
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim().toLowerCase(),
         password: form.password
       }, {
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
-      setSuccess('Account created successfully! Redirecting...');
-      setTimeout(() => navigate('/'), 2000);
+      setSuccess('Registration successful! Redirecting...');
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       console.error('Registration error:', err);
-      const errorMessage = err.response?.data?.error ||
-                           err.response?.data?.message ||
-                           'Registration failed. Please try again.';
+      
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (err.response) {
+        if (err.response.status === 409) {
+          errorMessage = 'Email already exists. Please use a different email.';
+        } else if (err.response.data?.message) {
+          errorMessage = err.response.data.message;
+        }
+      } else if (err.request) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  const isFormValid = () => Object.keys(validate()).length === 0;
+
   return (
     <Container sx={{ mt: 4, maxWidth: 400 }}>
       <Typography variant="h5" gutterBottom>Register</Typography>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+      
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           name="firstName"
@@ -115,6 +126,7 @@ export default function RegistrationPage() {
           error={!!errors.firstName}
           helperText={errors.firstName}
           sx={{ mb: 2 }}
+          autoFocus
         />
         <TextField
           name="lastName"
@@ -151,7 +163,7 @@ export default function RegistrationPage() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label="toggle password visibility"
                   onClick={() => setShowPassword(!showPassword)}
                   edge="end"
                 >
@@ -175,7 +187,7 @@ export default function RegistrationPage() {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  aria-label="toggle confirm password visibility"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   edge="end"
                 >
@@ -185,19 +197,20 @@ export default function RegistrationPage() {
             )
           }}
         />
-        <Button
-          type="submit"
-          variant="contained"
+        <Button 
+          type="submit" 
+          variant="contained" 
           fullWidth
-          sx={{ mt: 2 }}
           disabled={loading || !isFormValid()}
+          sx={{ py: 1.5, fontWeight: 'bold' }}
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
         </Button>
-        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          Already have an account? <Link href="/login">Log in</Link>
-        </Typography>
       </Box>
+      
+      <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+        Already have an account? <Link href="/login">Log in</Link>
+      </Typography>
     </Container>
   );
 }
