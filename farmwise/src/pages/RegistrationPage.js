@@ -1,8 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Container, TextField, Button, Typography, Alert, Box, Link } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, Link, CircularProgress, InputAdornment, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../context/AppContext';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function RegistrationPage() {
   const [form, setForm] = useState({
@@ -16,9 +18,14 @@ export default function RegistrationPage() {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
+  // Validate fields and return an object with error messages
   const validate = () => {
     const errs = {};
 
@@ -50,6 +57,7 @@ export default function RegistrationPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
     setError('');
+    setSuccess('');
   };
 
   const handleSubmit = async e => {
@@ -61,12 +69,14 @@ export default function RegistrationPage() {
     }
 
     setError('');
+    setSuccess('');
+    setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
+      const res = await axios.post('/api/auth/register', {
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
-        email: form.email.trim().toLowerCase(), // normalize email
+        email: form.email.trim().toLowerCase(),
         password: form.password
       }, {
         headers: {
@@ -80,7 +90,6 @@ export default function RegistrationPage() {
     } catch (err) {
       console.error('Registration error:', err);
       
-      // Handle different types of errors
       let errorMessage = 'Registration failed. Please try again.';
       
       if (err.response) {
@@ -94,8 +103,12 @@ export default function RegistrationPage() {
       }
 
       setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
+
+  const isFormValid = () => Object.keys(validate()).length === 0;
 
   return (
     <Container sx={{ mt: 4, maxWidth: 400 }}>
@@ -139,32 +152,59 @@ export default function RegistrationPage() {
         <TextField
           name="password"
           label="Password *"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           fullWidth
           value={form.password}
           onChange={handleChange}
           error={!!errors.password}
           helperText={errors.password || 'At least 8 characters'}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
         <TextField
           name="confirmPassword"
           label="Confirm Password *"
-          type="password"
+          type={showConfirmPassword ? 'text' : 'password'}
           fullWidth
           value={form.confirmPassword}
           onChange={handleChange}
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle confirm password visibility"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
         <Button 
           type="submit" 
           variant="contained" 
           fullWidth
+          disabled={loading || !isFormValid()}
           sx={{ py: 1.5, fontWeight: 'bold' }}
         >
-          REGISTER
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
         </Button>
       </Box>
       

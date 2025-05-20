@@ -7,8 +7,10 @@ import ConsumptionPage from '../pages/ConsumptionPage';
 import CommunityPage from '../pages/CommunityPage';
 import ToolsPage from '../pages/ToolsPage';
 import ContactPage from '../pages/ContactPage';
-import SignupPage  from '../pages/SignupPage';
-import LoginPage   from '../pages/LoginPage';
+import SignupPage from '../pages/SignupPage';
+import LoginPage from '../pages/LoginPage';
+import RegistrationPage from '../pages/RegistrationPage';
+import ForgotPassword from '../pages/ForgotPassword';  // <-- Import ForgotPassword
 
 export default function AppRoutes() {
   return (
@@ -21,7 +23,9 @@ export default function AppRoutes() {
       <Route path="/tools" element={<ToolsPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login"  element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegistrationPage />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }
