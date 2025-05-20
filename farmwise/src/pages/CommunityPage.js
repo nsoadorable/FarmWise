@@ -15,23 +15,12 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const headingFont = '"Sitka Semibold", serif';
-const bodyFont = '"Merriweather", serif';
-
-const colors = {
-  darkGreen: '#4b644a',
-  mediumGreen: '#84c461',
-  darkBrown: '#341c1c',
-  warmTan: '#b4654a',
-};
-
 export default function CommunityPage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [form, setForm]         = useState({ name: '', email: '', comment: '' });
   const [editId, setEditId]     = useState(null);
 
-  // Fetch all comments
   const fetchComments = async () => {
     try {
       setLoading(true);
@@ -45,12 +34,10 @@ export default function CommunityPage() {
   };
   useEffect(() => { fetchComments(); }, []);
 
-  // Handle input changes
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Create or update comment
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -67,13 +54,11 @@ export default function CommunityPage() {
     }
   };
 
-  // Prepare form for editing
   const handleEdit = c => {
     setForm({ name: c.name, email: c.email || '', comment: c.comment });
     setEditId(c.id);
   };
 
-  // Delete a comment
   const handleDelete = async id => {
     try {
       await axios.delete(`http://localhost:5000/api/comments/${id}`);
@@ -84,120 +69,153 @@ export default function CommunityPage() {
   };
 
   return (
-    <Container sx={{ my: 4, fontFamily: bodyFont, color: colors.darkBrown }}>
-      <Typography 
-        variant="h4" 
-        gutterBottom 
-        sx={{ fontFamily: headingFont, color: colors.darkGreen }}
+    <Container
+      maxWidth="md"
+      sx={{
+        my: 4,
+        fontFamily: "'Merriweather', serif",
+        backgroundColor: '#f5f7f3',
+        borderRadius: 2,
+        p: 3,
+        boxShadow: 3,
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a' }}
       >
         Community Hub
       </Typography>
 
       {/* Create / Edit form */}
-      <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
-        <TextField
-          label="Name"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          sx={{ 
-            mr: 2, mb: 2, width: '200px', 
-            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
-            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: colors.darkGreen },
-              '&:hover fieldset': { borderColor: colors.mediumGreen },
-              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
-            },
-          }}
-          required
-        />
-        <TextField
-          label="Email (optional)"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          sx={{ 
-            mr: 2, mb: 2, width: '200px',
-            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
-            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: colors.darkGreen },
-              '&:hover fieldset': { borderColor: colors.mediumGreen },
-              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
-            },
-          }}
-        />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          mb: 5,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          fontFamily: "'Merriweather', serif"
+        }}
+      >
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <TextField
+            label="Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            sx={{ flex: '1 1 200px' }}
+            inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
+          />
+          <TextField
+            label="Email (optional)"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            sx={{ flex: '1 1 200px' }}
+            inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
+          />
+        </Box>
+
         <TextField
           label="Comment"
           name="comment"
           value={form.comment}
           onChange={handleChange}
           multiline
-          rows={2}
-          sx={{ 
-            mb: 2, width: '100%',
-            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
-            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: colors.darkGreen },
-              '&:hover fieldset': { borderColor: colors.mediumGreen },
-              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
-            },
-          }}
+          rows={4}
           required
+          sx={{ width: '100%' }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
-        <Button 
-          type="submit" 
-          variant="contained"
-          sx={{ 
-            backgroundColor: colors.darkGreen,
-            fontFamily: bodyFont,
-            '&:hover': { backgroundColor: colors.mediumGreen }
-          }}
-        >
-          {editId ? 'Update Comment' : 'Post Comment'}
-        </Button>
-        {editId && (
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Button
-            onClick={() => {
-              setEditId(null);
-              setForm({ name: '', email: '', comment: '' });
+            type="submit"
+            variant="contained"
+            sx={{
+              bgcolor: '#4b644a',
+              fontFamily: "'Sitka Semibold', serif",
+              '&:hover': { bgcolor: '#84c461' }
             }}
-            sx={{ ml: 2, fontFamily: bodyFont, color: colors.warmTan }}
           >
-            Cancel
+            {editId ? 'Update Comment' : 'Post Comment'}
           </Button>
-        )}
+          {editId && (
+            <Button
+              onClick={() => {
+                setEditId(null);
+                setForm({ name: '', email: '', comment: '' });
+              }}
+              variant="outlined"
+              sx={{
+                fontFamily: "'Sitka Semibold', serif",
+                borderColor: '#b4654a',
+                color: '#b4654a',
+                '&:hover': {
+                  borderColor: '#341c1c',
+                  color: '#341c1c'
+                }
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+        </Box>
       </Box>
 
       {/* Comment list */}
       {loading ? (
-        <CircularProgress sx={{ color: colors.darkGreen }} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
+          <CircularProgress sx={{ color: '#4b644a' }} />
+        </Box>
       ) : (
-        <List sx={{ 
-          '& .MuiListItem-root': { fontFamily: bodyFont, color: colors.darkBrown },
-          '& .MuiListItemText-primary': { fontFamily: headingFont, color: colors.darkGreen },
-          '& .MuiListItemText-secondary': { fontFamily: bodyFont, color: colors.warmTan },
-        }}>
+        <List sx={{ bgcolor: 'white', borderRadius: 2, boxShadow: 1 }}>
           {comments.map(c => (
-            <ListItem 
-              key={c.id} 
+            <ListItem
+              key={c.id}
               divider
               secondaryAction={
-                <>
-                  <IconButton onClick={() => handleEdit(c)} sx={{ color: colors.mediumGreen }}>
+                <Box>
+                  <IconButton
+                    aria-label="edit"
+                    onClick={() => handleEdit(c)}
+                    sx={{ color: '#4b644a' }}
+                  >
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(c.id)} sx={{ color: colors.warmTan }}>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDelete(c.id)}
+                    sx={{ color: '#b4654a' }}
+                  >
                     <DeleteIcon />
                   </IconButton>
-                </>
+                </Box>
               }
+              sx={{ fontFamily: "'Merriweather', serif" }}
             >
               <ListItemText
-                primary={`${c.name} — ${new Date(c.created_at).toLocaleString()}`}
-                secondary={c.comment}
+                primary={
+                  <Typography
+                    variant="subtitle1"
+                    sx={{ fontFamily: "'Sitka Semibold', serif", color: '#341c1c' }}
+                  >
+                    {c.name} — {new Date(c.created_at).toLocaleString()}
+                  </Typography>
+                }
+                secondary={
+                  <Typography
+                    variant="body2"
+                    sx={{ fontFamily: "'Merriweather', serif", color: '#4b644a' }}
+                  >
+                    {c.comment}
+                  </Typography>
+                }
               />
             </ListItem>
           ))}
