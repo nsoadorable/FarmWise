@@ -15,6 +15,16 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const headingFont = '"Sitka Semibold", serif';
+const bodyFont = '"Merriweather", serif';
+
+const colors = {
+  darkGreen: '#4b644a',
+  mediumGreen: '#84c461',
+  darkBrown: '#341c1c',
+  warmTan: '#b4654a',
+};
+
 export default function CommunityPage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading]   = useState(true);
@@ -74,8 +84,12 @@ export default function CommunityPage() {
   };
 
   return (
-    <Container sx={{ my: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container sx={{ my: 4, fontFamily: bodyFont, color: colors.darkBrown }}>
+      <Typography 
+        variant="h4" 
+        gutterBottom 
+        sx={{ fontFamily: headingFont, color: colors.darkGreen }}
+      >
         Community Hub
       </Typography>
 
@@ -86,7 +100,16 @@ export default function CommunityPage() {
           name="name"
           value={form.name}
           onChange={handleChange}
-          sx={{ mr: 2, mb: 2, width: '200px' }}
+          sx={{ 
+            mr: 2, mb: 2, width: '200px', 
+            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
+            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: colors.darkGreen },
+              '&:hover fieldset': { borderColor: colors.mediumGreen },
+              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
+            },
+          }}
           required
         />
         <TextField
@@ -94,7 +117,16 @@ export default function CommunityPage() {
           name="email"
           value={form.email}
           onChange={handleChange}
-          sx={{ mr: 2, mb: 2, width: '200px' }}
+          sx={{ 
+            mr: 2, mb: 2, width: '200px',
+            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
+            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: colors.darkGreen },
+              '&:hover fieldset': { borderColor: colors.mediumGreen },
+              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
+            },
+          }}
         />
         <TextField
           label="Comment"
@@ -103,10 +135,27 @@ export default function CommunityPage() {
           onChange={handleChange}
           multiline
           rows={2}
-          sx={{ mb: 2, width: '100%' }}
+          sx={{ 
+            mb: 2, width: '100%',
+            '& label': { fontFamily: bodyFont, color: colors.darkGreen },
+            '& .MuiInputBase-input': { fontFamily: bodyFont, color: colors.darkBrown },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: colors.darkGreen },
+              '&:hover fieldset': { borderColor: colors.mediumGreen },
+              '&.Mui-focused fieldset': { borderColor: colors.mediumGreen },
+            },
+          }}
           required
         />
-        <Button type="submit" variant="contained">
+        <Button 
+          type="submit" 
+          variant="contained"
+          sx={{ 
+            backgroundColor: colors.darkGreen,
+            fontFamily: bodyFont,
+            '&:hover': { backgroundColor: colors.mediumGreen }
+          }}
+        >
           {editId ? 'Update Comment' : 'Post Comment'}
         </Button>
         {editId && (
@@ -115,7 +164,7 @@ export default function CommunityPage() {
               setEditId(null);
               setForm({ name: '', email: '', comment: '' });
             }}
-            sx={{ ml: 2 }}
+            sx={{ ml: 2, fontFamily: bodyFont, color: colors.warmTan }}
           >
             Cancel
           </Button>
@@ -124,17 +173,23 @@ export default function CommunityPage() {
 
       {/* Comment list */}
       {loading ? (
-        <CircularProgress />
+        <CircularProgress sx={{ color: colors.darkGreen }} />
       ) : (
-        <List>
+        <List sx={{ 
+          '& .MuiListItem-root': { fontFamily: bodyFont, color: colors.darkBrown },
+          '& .MuiListItemText-primary': { fontFamily: headingFont, color: colors.darkGreen },
+          '& .MuiListItemText-secondary': { fontFamily: bodyFont, color: colors.warmTan },
+        }}>
           {comments.map(c => (
-            <ListItem key={c.id} divider
+            <ListItem 
+              key={c.id} 
+              divider
               secondaryAction={
                 <>
-                  <IconButton onClick={() => handleEdit(c)}>
+                  <IconButton onClick={() => handleEdit(c)} sx={{ color: colors.mediumGreen }}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(c.id)}>
+                  <IconButton onClick={() => handleDelete(c.id)} sx={{ color: colors.warmTan }}>
                     <DeleteIcon />
                   </IconButton>
                 </>
