@@ -15,7 +15,6 @@ export default function ToolsPage() {
 
   const handleCalc = e => {
     e.preventDefault();
-    // Avg. ~404 grams CO2 per mile driven
     const grams = parseFloat(miles) * 404;
     setCo2((grams / 1000).toFixed(2)); // convert to kg
   };
@@ -30,40 +29,103 @@ export default function ToolsPage() {
   };
 
   return (
-    <Container sx={{ my: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container
+      maxWidth="md"
+      sx={{
+        my: 4,
+        p: 3,
+        backgroundColor: '#f5f7f3',
+        borderRadius: 2,
+        boxShadow: 3,
+        fontFamily: "'Merriweather', serif",
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a' }}
+      >
         Tools & Support
       </Typography>
 
-      {/* Carbon Footprint */}
-      <Box component="form" onSubmit={handleCalc} sx={{ mb: 4 }}>
-        <Typography variant="h6" gutterBottom>
+      {/* Carbon Footprint Calculator */}
+      <Box
+        component="form"
+        onSubmit={handleCalc}
+        sx={{
+          mb: 5,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 2,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ flexBasis: '100%', fontFamily: "'Sitka Semibold', serif", mb: 1, color: '#4b644a' }}
+        >
           Carbon Footprint Calculator
         </Typography>
+
         <TextField
           label="Miles driven per week"
           variant="outlined"
           type="number"
           value={miles}
           onChange={e => setMiles(e.target.value)}
-          sx={{ mr: 2, width: '200px' }}
           required
+          sx={{ width: { xs: '100%', sm: 200 } }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
-        <Button type="submit" variant="contained">
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            bgcolor: '#4b644a',
+            fontFamily: "'Sitka Semibold', serif",
+            '&:hover': { bgcolor: '#84c461' },
+            px: 4,
+            height: '56px', // match TextField height
+          }}
+        >
           Calculate
         </Button>
+
         {co2 !== null && (
-          <Alert severity="info" sx={{ mt: 2 }}>
+          <Alert
+            severity="info"
+            sx={{
+              mt: 2,
+              width: '100%',
+              fontFamily: "'Merriweather', serif",
+              backgroundColor: '#e6f0e6',
+              color: '#4b644a',
+              borderRadius: 1,
+            }}
+          >
             ≈ {co2} kg CO₂ per week
           </Alert>
         )}
       </Box>
 
       {/* Newsletter Signup */}
-      <Box component="form" onSubmit={handleSubscribe}>
-        <Typography variant="h6" gutterBottom>
+      <Box
+        component="form"
+        onSubmit={handleSubscribe}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 2,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ flexBasis: '100%', fontFamily: "'Sitka Semibold', serif", mb: 1, color: '#4b644a' }}
+        >
           Join our Newsletter
         </Typography>
+
         {!subscribed ? (
           <>
             <TextField
@@ -72,15 +134,36 @@ export default function ToolsPage() {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              sx={{ mr: 2, width: '300px' }}
               required
+              sx={{ width: { xs: '100%', sm: 300 } }}
+              inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
             />
-            <Button type="submit" variant="contained">
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                bgcolor: '#4b644a',
+                fontFamily: "'Sitka Semibold', serif",
+                '&:hover': { bgcolor: '#84c461' },
+                px: 4,
+                height: '56px',
+              }}
+            >
               Subscribe
             </Button>
           </>
         ) : (
-          <Alert severity="success">
+          <Alert
+            severity="success"
+            sx={{
+              fontFamily: "'Merriweather', serif",
+              width: '100%',
+              mt: 1,
+              backgroundColor: '#d4edda',
+              color: '#155724',
+              borderRadius: 1,
+            }}
+          >
             Thanks for subscribing, {email}!
           </Alert>
         )}
