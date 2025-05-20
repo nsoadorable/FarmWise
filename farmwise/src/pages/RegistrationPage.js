@@ -1,8 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Container, TextField, Button, Typography, Alert, Box, Link } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, Link, CircularProgress, InputAdornment, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../context/AppContext';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function RegistrationPage() {
   const [form, setForm] = useState({
@@ -16,6 +18,10 @@ export default function RegistrationPage() {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -36,12 +42,17 @@ export default function RegistrationPage() {
       errs.password = 'Password is required.';
     } else if (form.password.length < 8) {
       errs.password = 'Password must be at least 8 characters.';
-    } else if (form.password !== form.confirmPassword) {
+    }
+
+    if (form.password !== form.confirmPassword) {
       errs.confirmPassword = 'Passwords do not match.';
     }
 
     return errs;
   };
+
+  // Helper to check if form is valid (no validation errors)
+  const isFormValid = () => Object.keys(validate()).length === 0;
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,6 +71,7 @@ export default function RegistrationPage() {
 
     setError('');
     setSuccess('');
+    setLoading(true);
 
     const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
 
@@ -67,25 +79,24 @@ export default function RegistrationPage() {
       const res = await axios.post('http://localhost:5000/api/auth/register', {
         firstName: form.firstName,
         lastName: form.lastName,
-        fullName: fullName,
+        fullName,
         email: form.email,
         password: form.password
       }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
 
       dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
-
       setSuccess('Account created successfully! Redirecting...');
       setTimeout(() => navigate('/'), 2000);
     } catch (err) {
       console.error('Registration error:', err);
-      const errorMessage = err.response?.data?.error || 
-                         err.response?.data?.message || 
-                         'Registration failed. Please try again.';
+      const errorMessage = err.response?.data?.error ||
+                           err.response?.data?.message ||
+                           'Registration failed. Please try again.';
       setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,27 +140,59 @@ export default function RegistrationPage() {
         <TextField
           name="password"
           label="Password *"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           fullWidth
           value={form.password}
           onChange={handleChange}
           error={!!errors.password}
           helperText={errors.password || 'At least 8 characters'}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
         <TextField
           name="confirmPassword"
           label="Confirm Password *"
-          type="password"
+          type={showConfirmPassword ? 'text' : 'password'}
           fullWidth
           value={form.confirmPassword}
           onChange={handleChange}
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword}
           sx={{ mb: 2 }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          REGISTER
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{ mt: 2 }}
+          disabled={loading || !isFormValid()}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
         </Button>
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
           Already have an account? <Link href="/login">Log in</Link>
