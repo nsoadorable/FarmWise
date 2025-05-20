@@ -4,6 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 export default function Navbar() {
   const links = [
@@ -19,13 +20,25 @@ export default function Navbar() {
   ];
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#4b644a' }}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Box component="img" src="img/FW_Logo.png" alt="FarmWise Logo"
+         sx={{height:50, marginRight: 2 }} />
+        <Typography variant="h6" sx={{ flexGrow: 1, fontFamily: 'Sitka Text, serif' }}>
           FarmWise
         </Typography>
         {links.map(link => (
-          <Button color="inherit" component={Link} to={link.path} key={link.path}>
+          <Button key={link.path}
+            component={Link}
+            to={link.path}
+            sx={{
+              color: '#fff',
+              fontFamily: 'Merriweather, serif',
+              '&:hover': {
+                backgroundColor: '#84c461',
+                color: '#341c1c'
+              }
+            }}>
             {link.label}
           </Button>
         ))}
