@@ -13,7 +13,6 @@ export default function ForgotPassword() {
     setError('');
 
     try {
-      // Replace this URL with your backend forgot password API endpoint
       await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
       setMessage('Password reset link sent to your email.');
     } catch (err) {
@@ -22,10 +21,40 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Container sx={{ mt: 4, maxWidth: 400 }}>
-      <Typography variant="h5" gutterBottom>Forgot Password</Typography>
-      {message && <Alert severity="success" sx={{ mb: 2 }}>{message}</Alert>}
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+    <Container
+      sx={{
+        mt: 6,
+        maxWidth: 400,
+        bgcolor: '#f1f5f0',
+        p: 4,
+        borderRadius: 2,
+        boxShadow: 2,
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          fontFamily: 'Sitka Semibold, serif',
+          color: '#341c1c',
+          mb: 2,
+          textAlign: 'center',
+        }}
+      >
+        Forgot Password
+      </Typography>
+
+      {message && (
+        <Alert severity="success" sx={{ mb: 2, fontFamily: 'Merriweather, serif' }}>
+          {message}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2, fontFamily: 'Merriweather, serif' }}>
+          {error}
+        </Alert>
+      )}
+
       <Box component="form" onSubmit={handleSubmit}>
         <TextField
           name="email"
@@ -35,9 +64,27 @@ export default function ForgotPassword() {
           required
           value={email}
           onChange={e => setEmail(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2,
+            '& .MuiInputBase-root': {
+              fontFamily: 'Merriweather, serif',
+            },
+          }}
         />
-        <Button type="submit" variant="contained" fullWidth>
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            bgcolor: '#4b644a',
+            color: '#ffffff',
+            fontFamily: 'Sitka Semibold, serif',
+            textTransform: 'none',
+            '&:hover': {
+              bgcolor: '#3a5039',
+            },
+          }}
+        >
           Send Reset Link
         </Button>
       </Box>
