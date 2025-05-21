@@ -37,26 +37,34 @@ export default function RegistrationPage() {
   const navigate = useNavigate();
 
   const validate = () => {
-    const errs = {};
-    if (!form.firstName.trim()) errs.firstName = 'First name is required.';
-    if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
-    if (!form.email.trim()) {
-      errs.email = 'Email is required.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      errs.email = 'Invalid email address.';
-    }
-    if (!form.password) {
-      errs.password = 'Password is required.';
-    } else if (form.password.length < 8) {
-      errs.password = 'Password must be at least 8 characters.';
-    }
-    if (!form.confirmPassword) {
-      errs.confirmPassword = 'Please confirm your password.';
-    } else if (form.password !== form.confirmPassword) {
-      errs.confirmPassword = 'Passwords do not match.';
-    }
-    return errs;
-  };
+  const errs = {};
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  if (!form.firstName.trim()) errs.firstName = 'First name is required.';
+  if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
+
+  if (!form.email.trim()) {
+    errs.email = 'Email is required.';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errs.email = 'Invalid email address.';
+  }
+
+  if (!form.password) {
+    errs.password = 'Password is required.';
+  } else if (!passwordRegex.test(form.password)) {
+    errs.password =
+      'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.';
+  }
+
+  if (!form.confirmPassword) {
+    errs.confirmPassword = 'Please confirm your password.';
+  } else if (form.password !== form.confirmPassword) {
+    errs.confirmPassword = 'Passwords do not match.';
+  }
+
+  return errs;
+};
+
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -66,49 +74,49 @@ export default function RegistrationPage() {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+  e.preventDefault();
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
 
-    setError('');
-    setSuccess('');
-    setLoading(true);
+  setError('');
+  setSuccess('');
+  setLoading(true);
 
-    try {
-      const res = await axios.post('/api/auth/register', {
-        firstName: form.firstName.trim(),
-        lastName: form.lastName.trim(),
-        email: form.email.trim().toLowerCase(),
-        password: form.password
-      }, {
-        headers: { 'Content-Type': 'application/json' }
-      });
+  try {
+    const res = await axios.post('http://localhost:3000/api/auth/register', {
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim().toLowerCase(),
+      password: form.password
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-      dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
-      setSuccess('Registration successful! Redirecting...');
-      setTimeout(() => navigate('/'), 1500);
-    } catch (err) {
-      console.error('Registration error:', err);
-      let errorMessage = 'Registration failed. Please try again.';
+    dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
+    setSuccess('Registration successful! Redirecting to login...');
+    setTimeout(() => navigate('/login'), 1500); // This is correctly placed
+  } catch (err) {
+    console.error('Registration error:', err);
+    let errorMessage = 'Registration failed. Please try again.';
 
-      if (err.response) {
-        if (err.response.status === 409) {
-          errorMessage = 'Email already exists. Please use a different email.';
-        } else if (err.response.data?.message) {
-          errorMessage = err.response.data.message;
-        }
-      } else if (err.request) {
-        errorMessage = 'Network error. Please check your connection.';
+    if (err.response) {
+      if (err.response.status === 409) {
+        errorMessage = 'Email already exists. Please use a different email.';
+      } else if (err.response.data?.message) {
+        errorMessage = err.response.data.message;
       }
-
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
+    } else if (err.request) {
+      errorMessage = 'Network error. Please check your connection.';
     }
-  };
+
+    setError(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const isFormValid = () => Object.keys(validate()).length === 0;
 
@@ -133,21 +141,13 @@ export default function RegistrationPage() {
       </Typography>
 
       {error && (
-        <Alert
-          severity="error"
-          sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}
-          role="alert"
-        >
+        <Alert severity="error" sx={{ mb: 3 }} role="alert">
           {error}
         </Alert>
       )}
 
       {success && (
-        <Alert
-          severity="success"
-          sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}
-          role="alert"
-        >
+        <Alert severity="success" sx={{ mb: 3 }} role="alert">
           {success}
         </Alert>
       )}
@@ -189,14 +189,17 @@ export default function RegistrationPage() {
           inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
         <TextField
-          name="password"
-          label="Password *"
-          type={showPassword ? 'text' : 'password'}
-          fullWidth
-          value={form.password}
-          onChange={handleChange}
-          error={!!errors.password}
-          helperText={errors.password || 'At least 8 characters'}
+            name="password"
+            label="Password *"
+            type={showPassword ? 'text' : 'password'}
+            fullWidth
+            value={form.password}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={
+                errors.password ||
+                'At least 8 characters'
+            }
           sx={{ mb: 2 }}
           inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
           InputProps={{
