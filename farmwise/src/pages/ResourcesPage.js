@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { Container, Grid, Typography, CircularProgress, Alert, Box, Chip } from '@mui/material';
 import ResourceCard from '../components/ResourceCard';
 
@@ -13,6 +13,7 @@ export default function ResourcesPage() {
       try {
         setLoading(true);
         setError(null);
+        
         const response = await fetch('https://api.example.com/educational-farming-resources', {
           headers: {
             'Accept': 'application/json',
@@ -25,13 +26,13 @@ export default function ResourcesPage() {
         }
 
         const data = await response.json();
-
-        // Filter for educational content
-        const educationalResources = data.filter(item =>
-          item.categories?.includes('education') ||
-          item.type === 'guide' ||
-          item.title?.toLowerCase().includes('how to') ||
-          item.description?.toLowerCase().includes('tutorial')
+        
+        // Filter out videos here (remove items where type === 'video')
+        const educationalResources = data.filter(item => 
+          (item.categories?.includes('education') || item.type === 'guide' || item.type === 'research' ||
+           item.title?.toLowerCase().includes('how to') ||
+           item.description?.toLowerCase().includes('tutorial')) &&
+          item.type !== 'video' // exclude videos
         );
 
         setResources(educationalResources);
@@ -46,7 +47,12 @@ export default function ResourcesPage() {
     fetchResources();
   }, []);
 
-  // Mock resources if API fails or empty
+  // Filter resources by type except video removed
+  const filteredResources = filter === 'all' 
+    ? resources 
+    : resources.filter(resource => resource.type === filter);
+
+  // Mock data without video items
   const mockResources = [
     {
       id: 1,
@@ -58,74 +64,58 @@ export default function ResourcesPage() {
       categories: ['education', 'sustainability'],
       level: 'beginner'
     },
-    {
-      id: 2,
-      title: 'How to Start a Small Farm: Video Course',
-      description: 'Step-by-step video tutorials for new farmers covering everything from land preparation to harvest.',
-      url: '#',
-      source: 'Farmers Academy',
-      type: 'video',
-      categories: ['education', 'beginner'],
-      level: 'beginner'
-    },
+    // Removed video mock items
+    // Add other non-video mock items here as needed
   ];
 
-  const filteredResources = filter === 'all' 
-    ? resources 
-    : resources.filter(resource => resource.type === filter);
-
+  // Use mock data if no resources loaded
   const displayResources = resources.length > 0 ? filteredResources : mockResources;
 
   return (
-    <Container sx={{ my: 4, fontFamily: "'Merriweather', serif", color: '#341c1c' }}>
-      <Typography 
-        variant="h4" 
-        gutterBottom 
-        sx={{ 
-          mb: 3, 
-          fontFamily: "'Sitka', serif", 
-          fontWeight: 600, 
-          color: '#4b644a' 
-        }}
-      >
+    <Container sx={{ my: 4 }}>
+      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
         Educational Farming Resources
       </Typography>
 
+      {/* Filter chips without Videos */}
       <Box sx={{ mb: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {['all', 'guide', 'video', 'research'].map(type => (
-          <Chip
-            key={type}
-            label={type.charAt(0).toUpperCase() + type.slice(1)}
-            onClick={() => setFilter(type)}
-            color={filter === type ? 'success' : 'default'}
-            variant={filter === type ? 'filled' : 'outlined'}
-            sx={{
-              fontFamily: "'Sitka', serif",
-              fontWeight: 600,
-              cursor: 'pointer',
-              userSelect: 'none',
-              '&:hover': {
-                backgroundColor: '#84c461',
-                color: '#fff',
-              }
-            }}
-          />
-        ))}
+        <Chip 
+          label="All" 
+          onClick={() => setFilter('all')} 
+          color={filter === 'all' ? 'primary' : 'default'} 
+        />
+        <Chip 
+          label="Guides" 
+          onClick={() => setFilter('guide')} 
+          color={filter === 'guide' ? 'primary' : 'default'} 
+        />
+        <Chip 
+          label="Research" 
+          onClick={() => setFilter('research')} 
+          color={filter === 'research' ? 'primary' : 'default'} 
+        />
       </Box>
 
       {loading ? (
         <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress sx={{ color: '#4b644a' }} />
+          <CircularProgress />
         </Box>
       ) : error ? (
-        <Alert severity="error" sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}>
+        <Alert severity="error" sx={{ mb: 3 }}>
           {error} - Showing sample resources instead
         </Alert>
       ) : (
         <Grid container spacing={3}>
-          {displayResources.map(resource => (
+          {displayResources.map((resource) => (
             <Grid item xs={12} sm={6} md={4} key={resource.id || resource.url}>
-              <ResourceCard {...resource} />
+              <ResourceCard
+                title={resource.title}
+                description={resource.description}
+                url={resource.url}
+                source={resource.source}
+                type={resource.type}
+                level={resource.level}
+              />
             </Grid>
           ))}
         </Grid>
