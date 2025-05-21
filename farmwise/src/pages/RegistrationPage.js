@@ -1,6 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { Container, TextField, Button, Typography, Alert, Box, Link, CircularProgress, InputAdornment, IconButton } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Box,
+  Link as MuiLink,
+  CircularProgress,
+  InputAdornment,
+  IconButton
+} from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../context/AppContext';
 import Visibility from '@mui/icons-material/Visibility';
@@ -25,31 +36,25 @@ export default function RegistrationPage() {
   const { dispatch } = useContext(AppContext);
   const navigate = useNavigate();
 
-  // Validate fields and return an object with error messages
   const validate = () => {
     const errs = {};
-
     if (!form.firstName.trim()) errs.firstName = 'First name is required.';
     if (!form.lastName.trim()) errs.lastName = 'Last name is required.';
-
     if (!form.email.trim()) {
       errs.email = 'Email is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       errs.email = 'Invalid email address.';
     }
-
     if (!form.password) {
       errs.password = 'Password is required.';
     } else if (form.password.length < 8) {
       errs.password = 'Password must be at least 8 characters.';
     }
-
     if (!form.confirmPassword) {
       errs.confirmPassword = 'Please confirm your password.';
     } else if (form.password !== form.confirmPassword) {
       errs.confirmPassword = 'Passwords do not match.';
     }
-
     return errs;
   };
 
@@ -79,9 +84,7 @@ export default function RegistrationPage() {
         email: form.email.trim().toLowerCase(),
         password: form.password
       }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
 
       dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
@@ -89,9 +92,8 @@ export default function RegistrationPage() {
       setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       console.error('Registration error:', err);
-      
       let errorMessage = 'Registration failed. Please try again.';
-      
+
       if (err.response) {
         if (err.response.status === 409) {
           errorMessage = 'Email already exists. Please use a different email.';
@@ -111,11 +113,45 @@ export default function RegistrationPage() {
   const isFormValid = () => Object.keys(validate()).length === 0;
 
   return (
-    <Container sx={{ mt: 4, maxWidth: 400 }}>
-      <Typography variant="h5" gutterBottom>Register</Typography>
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-      
+    <Container
+      maxWidth="xs"
+      sx={{
+        mt: 6,
+        p: 4,
+        backgroundColor: '#f5f7f3',
+        borderRadius: 2,
+        boxShadow: 3,
+        fontFamily: "'Merriweather', serif",
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a', textAlign: 'center' }}
+      >
+        Register
+      </Typography>
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}
+          role="alert"
+        >
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert
+          severity="success"
+          sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}
+          role="alert"
+        >
+          {success}
+        </Alert>
+      )}
+
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           name="firstName"
@@ -127,6 +163,7 @@ export default function RegistrationPage() {
           helperText={errors.firstName}
           sx={{ mb: 2 }}
           autoFocus
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
         <TextField
           name="lastName"
@@ -137,6 +174,7 @@ export default function RegistrationPage() {
           error={!!errors.lastName}
           helperText={errors.lastName}
           sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
         <TextField
           name="email"
@@ -148,6 +186,7 @@ export default function RegistrationPage() {
           error={!!errors.email}
           helperText={errors.email}
           sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
         <TextField
           name="password"
@@ -159,6 +198,7 @@ export default function RegistrationPage() {
           error={!!errors.password}
           helperText={errors.password || 'At least 8 characters'}
           sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -170,7 +210,7 @@ export default function RegistrationPage() {
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
-            )
+            ),
           }}
         />
         <TextField
@@ -183,6 +223,7 @@ export default function RegistrationPage() {
           error={!!errors.confirmPassword}
           helperText={errors.confirmPassword}
           sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -194,22 +235,42 @@ export default function RegistrationPage() {
                   {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
-            )
+            ),
           }}
         />
-        <Button 
-          type="submit" 
-          variant="contained" 
+        <Button
+          type="submit"
+          variant="contained"
           fullWidth
           disabled={loading || !isFormValid()}
-          sx={{ py: 1.5, fontWeight: 'bold' }}
+          sx={{
+            py: 1.5,
+            fontWeight: 'bold',
+            bgcolor: '#4b644a',
+            '&:hover': { bgcolor: '#84c461' },
+            fontFamily: "'Sitka Semibold', serif",
+            fontSize: '1rem',
+            mb: 1,
+          }}
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER'}
         </Button>
       </Box>
-      
-      <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-        Already have an account? <Link href="/login">Log in</Link>
+
+      <Typography
+        variant="body2"
+        align="center"
+        sx={{ mt: 3, color: '#4b644a', fontFamily: "'Merriweather', serif" }}
+      >
+        Already have an account?{' '}
+        <MuiLink
+          component={Link}
+          to="/login"
+          underline="hover"
+          sx={{ cursor: 'pointer', color: '#84c461', fontWeight: 600 }}
+        >
+          Log in
+        </MuiLink>
       </Typography>
     </Container>
   );

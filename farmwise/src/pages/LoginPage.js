@@ -1,6 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { Container, TextField, Button, Typography, Alert, Box, Link as MuiLink } from '@mui/material';
-import { Link } from 'react-router-dom'; // ✅ Import Link
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  Box,
+  Link as MuiLink
+} from '@mui/material';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AppContext from '../context/AppContext';
 
@@ -23,33 +31,102 @@ export default function LoginPage() {
   };
 
   return (
-    <Container sx={{ mt: 4, maxWidth: 400 }}>
-      <Typography variant="h5" gutterBottom>Log In</Typography>
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      <Box component="form" onSubmit={handleSubmit}>
+    <Container
+      maxWidth="xs"
+      sx={{
+        mt: 6,
+        p: 4,
+        backgroundColor: '#f5f7f3',
+        borderRadius: 2,
+        boxShadow: 3,
+        fontFamily: "'Merriweather', serif",
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a', textAlign: 'center' }}
+      >
+        Log In
+      </Typography>
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}
+          role="alert"
+        >
+          {error}
+        </Alert>
+      )}
+
+      <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
-          name="email" label="Email" type="email"
-          fullWidth value={form.email} onChange={handleChange}
-          required sx={{ mb: 2 }}
+          name="email"
+          label="Email"
+          type="email"
+          fullWidth
+          value={form.email}
+          onChange={handleChange}
+          required
+          sx={{ mb: 3 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
         <TextField
-          name="password" label="Password" type="password"
-          fullWidth value={form.password} onChange={handleChange}
-          required sx={{ mb: 1 }}
+          name="password"
+          label="Password"
+          type="password"
+          fullWidth
+          value={form.password}
+          onChange={handleChange}
+          required
+          sx={{ mb: 2 }}
+          inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
         />
-        {/* Forgot Password Link */}
-        <Typography variant="body2" sx={{ mb: 2, textAlign: 'center' }}>
-          <MuiLink component={Link} to="/forgot-password" underline="hover" sx={{ cursor: 'pointer' }}>
+
+        <Typography
+          variant="body2"
+          sx={{ mb: 3, textAlign: 'center', color: '#4b644a', fontFamily: "'Merriweather', serif" }}
+        >
+          <MuiLink
+            component={Link}
+            to="/forgot-password"
+            underline="hover"
+            sx={{ cursor: 'pointer', fontWeight: 500, color: '#84c461' }}
+          >
             Forgot Password?
           </MuiLink>
         </Typography>
-        <Button type="submit" variant="contained" fullWidth>Log In</Button>
+
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            bgcolor: '#4b644a',
+            fontFamily: "'Sitka Semibold', serif",
+            fontSize: '1rem',
+            '&:hover': { bgcolor: '#84c461' },
+            py: 1.5,
+            mb: 2,
+          }}
+        >
+          Log In
+        </Button>
       </Box>
 
-      {/* Register Link */}
-      <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+      <Typography
+        variant="body2"
+        align="center"
+        sx={{ color: '#4b644a', fontFamily: "'Merriweather', serif" }}
+      >
         Don’t have an account yet?{' '}
-        <MuiLink component={Link} to="/register" underline="hover" sx={{ cursor: 'pointer', color: '#1976d2' }}>
+        <MuiLink
+          component={Link}
+          to="/register"
+          underline="hover"
+          sx={{ cursor: 'pointer', color: '#84c461', fontWeight: 600 }}
+        >
           Register
         </MuiLink>
       </Typography>

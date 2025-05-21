@@ -23,12 +23,26 @@ export default function ContactPage() {
   };
 
   return (
-    <Container sx={{ my: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Contact & About
+    <Container
+      maxWidth="md"
+      sx={{
+        my: 4,
+        fontFamily: "'Merriweather', serif",
+        backgroundColor: '#f5f7f3',
+        borderRadius: 2,
+        p: 3,
+        boxShadow: 3,
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a' }}
+      >
+        Contact &amp; About
       </Typography>
 
-      <Typography paragraph>
+      <Typography paragraph sx={{ color: '#341c1c' }}>
         FarmWise is dedicated to empowering farmers and students with digital
         learning tools for sustainable agriculture. Our team of experts and
         advocates is here to help.
@@ -36,7 +50,7 @@ export default function ContactPage() {
 
       {!sent ? (
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Name"
@@ -45,6 +59,7 @@ export default function ContactPage() {
                 value={form.name}
                 onChange={handleChange}
                 required
+                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -56,6 +71,7 @@ export default function ContactPage() {
                 value={form.email}
                 onChange={handleChange}
                 required
+                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -64,19 +80,32 @@ export default function ContactPage() {
                 name="message"
                 fullWidth
                 multiline
-                rows={4}
+                rows={5}
                 value={form.message}
                 onChange={handleChange}
                 required
+                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
               />
             </Grid>
           </Grid>
-          <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              mt: 3,
+              bgcolor: '#4b644a',
+              fontFamily: "'Sitka Semibold', serif",
+              '&:hover': { bgcolor: '#84c461' }
+            }}
+          >
             Send Message
           </Button>
         </Box>
       ) : (
-        <Typography color="success.main" sx={{ mt: 3 }}>
+        <Typography
+          color="success.main"
+          sx={{ mt: 3, fontFamily: "'Merriweather', serif" }}
+        >
           Thank you, we’ll get back to you soon!
         </Typography>
       )}
