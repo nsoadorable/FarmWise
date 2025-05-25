@@ -198,7 +198,7 @@ export default function RegistrationPage() {
             error={!!errors.password}
             helperText={
                 errors.password ||
-                'At least 8 characters'
+                'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
             }
           sx={{ mb: 2 }}
           inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
