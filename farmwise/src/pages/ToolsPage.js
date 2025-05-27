@@ -72,21 +72,21 @@ export default function ToolsPage() {
           <li><Typography variant="body1">Contribute to global climate change mitigation efforts</Typography></li>
         </ul>
         <Typography variant="body2" sx={{ fontStyle: 'italic', mt: 2 }}>
-          According to a study by the International Council on Clean Transportation (ICCT), 
-          light-duty vehicles account for about 10% of global CO₂ emissions from fuel combustion.
+          The International Energy Agency reports that road transport accounts for 
+          about 16% of global CO₂ emissions from fuel combustion.
           <br />
-          <Link 
-            href="https://theicct.org/sites/default/files/publications/Global-transport-CO2-2030_ICCT-WorkingPaper_2019-02-26.pdf" 
-            target="_blank" 
-            rel="noopener"
-            sx={{ color: '#4b644a', textDecorationColor: '#4b644a' }}
-          >
-            (ICCT, 2019)
-          </Link>
+            <Link 
+              href="https://www.iea.org/reports/co2-emissions-in-2022" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              sx={{ color: '#4b644a', textDecorationColor: '#4b644a' }}
+            >
+              (IEA, 2022)
+            </Link>
         </Typography>
       </Paper>
 
-      {/* Carbon Footprint Calculator (unchanged) */}
+      {/* Carbon Footprint Calculator */}
       <Box
         component="form"
         onSubmit={handleCalc}
@@ -146,7 +146,7 @@ export default function ToolsPage() {
         )}
       </Box>
 
-      {/* Newsletter Signup (unchanged) */}
+      {/* Newsletter Signup */}
       <Box
         component="form"
         onSubmit={handleSubscribe}
