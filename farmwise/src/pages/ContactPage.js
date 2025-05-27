@@ -4,8 +4,7 @@ import {
   Typography,
   TextField,
   Button,
-  Box,
-  Grid
+  Box
 } from '@mui/material';
 
 export default function ContactPage() {
@@ -50,49 +49,43 @@ export default function ContactPage() {
 
       {!sent ? (
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Name"
-                name="name"
-                fullWidth
-                value={form.name}
-                onChange={handleChange}
-                required
-                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Email"
-                name="email"
-                type="email"
-                fullWidth
-                value={form.email}
-                onChange={handleChange}
-                required
-                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Message"
-                name="message"
-                fullWidth
-                multiline
-                rows={5}
-                value={form.message}
-                onChange={handleChange}
-                required
-                inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
-              />
-            </Grid>
-          </Grid>
+          <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <TextField
+              label="Name"
+              name="name"
+              fullWidth
+              value={form.name}
+              onChange={handleChange}
+              required
+              inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
+            />
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              fullWidth
+              value={form.email}
+              onChange={handleChange}
+              required
+              inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
+            />
+          </Box>
+          <TextField
+            label="Message"
+            name="message"
+            fullWidth
+            multiline
+            rows={5}
+            value={form.message}
+            onChange={handleChange}
+            required
+            sx={{ mb: 2 }}
+            inputProps={{ style: { fontFamily: "'Merriweather', serif" } }}
+          />
           <Button
             type="submit"
             variant="contained"
             sx={{
-              mt: 3,
               bgcolor: '#4b644a',
               fontFamily: "'Sitka Semibold', serif",
               '&:hover': { bgcolor: '#84c461' }
@@ -106,7 +99,7 @@ export default function ContactPage() {
           color="success.main"
           sx={{ mt: 3, fontFamily: "'Merriweather', serif" }}
         >
-          Thank you, we’ll get back to you soon!
+          Thank you, we'll get back to you soon!
         </Typography>
       )}
     </Container>
