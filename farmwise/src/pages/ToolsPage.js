@@ -5,24 +5,25 @@ import {
   TextField,
   Button,
   Box,
-  Alert
+  Alert,
+  Paper,
+  Link
 } from '@mui/material';
 
 export default function ToolsPage() {
-  // Carbon calculator state
+  // Carbon calculator state (unchanged)
   const [miles, setMiles] = useState('');
   const [co2, setCo2] = useState(null);
 
   const handleCalc = e => {
     e.preventDefault();
     const grams = parseFloat(miles) * 404;
-    setCo2((grams / 1000).toFixed(2)); // convert to kg
+    setCo2((grams / 1000).toFixed(2));
   };
 
-  // Newsletter state
+  // Newsletter state (unchanged)
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
-
   const handleSubscribe = e => {
     e.preventDefault();
     if (email.trim()) setSubscribed(true);
@@ -48,7 +49,44 @@ export default function ToolsPage() {
         Tools & Support
       </Typography>
 
-      {/* Carbon Footprint Calculator */}
+      {/* Educational Section */}
+      <Paper elevation={0} sx={{ 
+        p: 3, 
+        mb: 4,
+        backgroundColor: 'rgba(75, 100, 74, 0.05)',
+        borderLeft: '4px solid #4b644a'
+      }}>
+        <Typography variant="h6" sx={{ 
+          fontFamily: "'Sitka Semibold', serif", 
+          color: '#4b644a',
+          mb: 1
+        }}>
+          Why Calculate Your Carbon Footprint?
+        </Typography>
+        <Typography variant="body1" paragraph>
+          Understanding your transportation emissions helps:
+        </Typography>
+        <ul style={{ marginTop: 0, paddingLeft: '24px' }}>
+          <li><Typography variant="body1">Identify opportunities to reduce environmental impact</Typography></li>
+          <li><Typography variant="body1">Make informed decisions about vehicle use and alternatives</Typography></li>
+          <li><Typography variant="body1">Contribute to global climate change mitigation efforts</Typography></li>
+        </ul>
+        <Typography variant="body2" sx={{ fontStyle: 'italic', mt: 2 }}>
+          According to a study by the International Council on Clean Transportation (ICCT), 
+          light-duty vehicles account for about 10% of global CO₂ emissions from fuel combustion.
+          <br />
+          <Link 
+            href="https://theicct.org/sites/default/files/publications/Global-transport-CO2-2030_ICCT-WorkingPaper_2019-02-26.pdf" 
+            target="_blank" 
+            rel="noopener"
+            sx={{ color: '#4b644a', textDecorationColor: '#4b644a' }}
+          >
+            (ICCT, 2019)
+          </Link>
+        </Typography>
+      </Paper>
+
+      {/* Carbon Footprint Calculator (unchanged) */}
       <Box
         component="form"
         onSubmit={handleCalc}
@@ -85,7 +123,7 @@ export default function ToolsPage() {
             fontFamily: "'Sitka Semibold', serif",
             '&:hover': { bgcolor: '#84c461' },
             px: 4,
-            height: '56px', // match TextField height
+            height: '56px',
           }}
         >
           Calculate
@@ -108,7 +146,7 @@ export default function ToolsPage() {
         )}
       </Box>
 
-      {/* Newsletter Signup */}
+      {/* Newsletter Signup (unchanged) */}
       <Box
         component="form"
         onSubmit={handleSubscribe}
