@@ -16,7 +16,8 @@ export default function Navbar() {
     { path: '/tools', label: 'Tools' },
     { path: '/contact', label: 'Contact' },
     { path: '/login', label: 'Login'},
-    { path: '/register', label: 'register'}
+    { path: '/register', label: 'Register'},
+    // { path: '/admin', label: 'Admin' }, // REMOVE or COMMENT OUT this line
   ];
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import ResourcesPage from '../pages/ResourcesPage';
@@ -10,9 +10,14 @@ import ContactPage from '../pages/ContactPage';
 import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
 import RegistrationPage from '../pages/RegistrationPage';
-import ForgotPassword from '../pages/ForgotPassword';  // <-- Import ForgotPassword
+import ForgotPassword from '../pages/ForgotPassword';
+import AdminLoginPage from '../pages/AdminLoginPage';
+import AdminDashboard from '../pages/AdminDashboard';
 
 export default function AppRoutes() {
+  // Track admin login state (token or boolean)
+  const [adminToken, setAdminToken] = useState(null);
+
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -26,6 +31,14 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistrationPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route
+        path="/admin"
+        element={
+          adminToken
+            ? <AdminDashboard onLogout={() => setAdminToken(null)} />
+            : <AdminLoginPage onLogin={setAdminToken} />
+        }
+      />
     </Routes>
   );
 }
