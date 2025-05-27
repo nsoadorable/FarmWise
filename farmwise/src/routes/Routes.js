@@ -15,7 +15,6 @@ import AdminLoginPage from '../pages/AdminLoginPage';
 import AdminDashboard from '../pages/AdminDashboard';
 
 export default function AppRoutes() {
-  // Track admin login state (token or boolean)
   const [adminToken, setAdminToken] = useState(null);
 
   return (
@@ -31,14 +30,11 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistrationPage />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route
-        path="/admin"
-        element={
-          adminToken
-            ? <AdminDashboard onLogout={() => setAdminToken(null)} />
-            : <AdminLoginPage onLogin={setAdminToken} />
-        }
-      />
+      <Route path="/admin" element={
+        adminToken
+          ? <AdminDashboard onLogout={() => setAdminToken(null)} />
+          : <AdminLoginPage onLogin={setAdminToken} />
+      } />
     </Routes>
   );
 }

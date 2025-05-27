@@ -1,3 +1,4 @@
+// src/pages/ConsumptionPage.js
 import React, { useState } from 'react';
 import {
   Container,
@@ -20,7 +21,7 @@ import {
   Legend
 } from 'recharts';
 
-// Define styles
+// Styles
 const headingStyle = {
   fontFamily: 'Sitka Text, serif',
   fontWeight: 600,
@@ -32,7 +33,7 @@ const bodyStyle = {
   lineHeight: 1.6
 };
 
-// Actual Philippine seasonal produce data
+// Philippine seasonal produce data
 const seasonalData = [
   { month: 'January', items: 10, fruits: 'Mango, Pineapple, Banana, Watermelon, Papaya, Coconut, Citrus, Guava', vegetables: 'Ampalaya, Eggplant' },
   { month: 'February', items: 9, fruits: 'Mango, Pineapple, Banana, Papaya, Coconut, Citrus, Guava', vegetables: 'Carrot, Pechay' },
@@ -57,27 +58,19 @@ export default function ConsumptionPage() {
     'Store fruits and veggies properly to extend freshness.',
     'Use leftovers creatively—soups, stir‑fries, and smoothies.',
     'Compost food scraps instead of throwing them away.',
-    'Buy "ugly" produce at a discount to reduce waste.'
+    'Buy “ugly” produce at a discount to reduce waste.'
   ];
 
-  const handlePledgeSubmit = (e) => {
+  const handlePledgeSubmit = e => {
     e.preventDefault();
-    if (pledge.trim()) {
-      setSubmitted(true);
-    }
+    if (pledge.trim()) setSubmitted(true);
   };
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const { month, fruits, vegetables } = payload[0].payload;
       return (
-        <Box sx={{
-          bgcolor: 'background.paper',
-          p: 2,
-          borderRadius: 1,
-          boxShadow: 3,
-          border: '1px solid #ddd'
-        }}>
+        <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 3, border: '1px solid #ddd' }}>
           <Typography variant="subtitle2">{month}</Typography>
           <Typography variant="body2">Fruits:</Typography>
           <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1 }}>{fruits}</Typography>
@@ -96,7 +89,7 @@ export default function ConsumptionPage() {
       </Typography>
 
       {/* Seasonal Produce Chart */}
-      <Box sx={{ width: '100%', height: 300, mb: 4 }}>
+      <Box sx={{ width: '100%', height: 300, mb: 2 }}>
         <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
           Philippine Seasonal Produce by Month
         </Typography>
@@ -111,6 +104,19 @@ export default function ConsumptionPage() {
         </ResponsiveContainer>
       </Box>
 
+      {/* Official Seasonal Calendar Link */}
+      <Box sx={{ textAlign: 'right', mb: 4 }}>
+        <Button
+          size="small"
+          component="a"
+          href="https://da.gov.ph/seasonal-produce-calendar"
+          target="_blank"
+          rel="noopener"
+        >
+          View Official Seasonal Calendar
+        </Button>
+      </Box>
+
       {/* Sustainable Eating Tips */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
@@ -121,10 +127,7 @@ export default function ConsumptionPage() {
             <Grid item xs={12} sm={6} key={i}>
               <List>
                 <ListItem sx={{ bgcolor: '#ffffffcc', borderRadius: 2 }}>
-                  <ListItemText
-                    primary={tip}
-                    primaryTypographyProps={{ sx: { ...bodyStyle, color: '#341c1c' } }}
-                  />
+                  <ListItemText primary={tip} primaryTypographyProps={{ sx: { ...bodyStyle, color: '#341c1c' } }} />
                 </ListItem>
               </List>
             </Grid>
@@ -132,13 +135,13 @@ export default function ConsumptionPage() {
         </Grid>
       </Box>
 
-      {/* Pledge Form - Single instance (removed duplicate) */}
+      {/* Pledge Form */}
       <Box>
         <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
           Take the Pledge
         </Typography>
         {!submitted ? (
-          <form onSubmit={handlePledgeSubmit}>
+          <Box component="form" onSubmit={handlePledgeSubmit}>
             <TextField
               label="My pledge to reduce food waste..."
               variant="outlined"
@@ -146,33 +149,42 @@ export default function ConsumptionPage() {
               multiline
               rows={2}
               value={pledge}
-              onChange={(e) => setPledge(e.target.value)}
+              onChange={e => setPledge(e.target.value)}
               sx={{ mb: 2, backgroundColor: '#ffffffcc', borderRadius: 1 }}
               required
-              InputProps={{
-                sx: { fontFamily: 'Merriweather, serif' }
-              }}
+              InputProps={{ sx: { fontFamily: 'Merriweather, serif' } }}
             />
-            <Button 
-              type="submit" 
-              variant="contained" 
-              sx={{ 
-                backgroundColor: '#4b644a', 
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                backgroundColor: '#4b644a',
                 fontFamily: 'Sitka Text, serif',
                 fontWeight: 600,
-                '&:hover': {
-                  backgroundColor: '#3a5039'
-                }
+                '&:hover': { backgroundColor: '#3a5039' }
               }}
             >
               Submit Pledge
             </Button>
-          </form>
+          </Box>
         ) : (
           <Typography variant="body1" sx={{ ...bodyStyle, color: '#4b644a' }}>
-            Thank you for your pledge! "{pledge}"
+            Thank you for your pledge! “{pledge}”
           </Typography>
         )}
+      </Box>
+
+      {/* Sources */}
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="body2" sx={{ fontFamily: 'Merriweather, serif' }}>
+          Sources: 
+          <Button component="a" href="https://da.gov.ph/agriculture-calendar" target="_blank" rel="noopener" size="small" sx={{ textTransform: 'none', ml: 1 }}>
+            DA Agricultural Calendar
+          </Button>
+          <Button component="a" href="https://www.philmech.gov.ph/" target="_blank" rel="noopener" size="small" sx={{ textTransform: 'none', ml: 1 }}>
+            PHilMech
+          </Button>
+        </Typography>
       </Box>
     </Container>
   );
