@@ -60,7 +60,7 @@ export default function HomePage() {
           alignItems: 'center',
           justifyContent: 'center',
           px: 2,
-          position: 'relative', // Add this for positioning the arrow
+          position: 'relative', 
         }}
       >
         <Container maxWidth="md">
@@ -73,7 +73,7 @@ export default function HomePage() {
               backdropFilter: 'blur(4px)',
             }}
           >
-            <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: 'Sitka Semibold' }}>
+            <Typography variant="h3" component="h1" gutterBottom sx={{ fontFamily: 'Sitka Semibold', color: '#1d2c12' }}>
               Welcome to FarmWise
             </Typography>
             <Typography variant="h6" gutterBottom sx={{ fontFamily: 'Merriweather' }}>

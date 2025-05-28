@@ -24,6 +24,7 @@ import {
 // Styles
 const headingStyle = {
   fontFamily: 'Sitka Text, serif',
+  color: '#1d2c12',
   fontWeight: 600,
   marginBottom: '1rem'
 };
