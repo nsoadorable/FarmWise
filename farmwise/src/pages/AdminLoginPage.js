@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Container,
   TextField,
@@ -20,20 +20,25 @@ export default function AdminLoginPage({ onLogin }) {
     setError(''); // Clear error when typing
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = useCallback(async e => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     try {
       const res = await axios.post('http://localhost:5000/api/auth/admin-login', form);
+
+      // Store the token in localStorage
+      localStorage.setItem('adminToken', res.data.token);
+
+      // Pass the token to the onLogin function
       onLogin(res.data.token);
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid admin credentials');
     } finally {
       setLoading(false);
     }
-  };
+  }, [form, onLogin]); // Ensure dependencies are tracked
 
   return (
     <Container

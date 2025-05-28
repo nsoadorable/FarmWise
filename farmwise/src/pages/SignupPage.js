@@ -43,7 +43,7 @@ export default function SignupPage() {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', {
+      await axios.post('http://localhost:3000/api/auth/signup', {
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,
