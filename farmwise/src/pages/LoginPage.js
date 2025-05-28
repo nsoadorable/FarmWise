@@ -23,7 +23,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/login', form);
+      const res = await axios.post('http://localhost:5000/api/auth/login', form);
       dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed.');
