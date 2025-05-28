@@ -1,6 +1,45 @@
 import React from 'react';
 import { Container, Box, Typography, Button, Paper, Grid } from '@mui/material';
 
+const ScrollPrompt = () => (
+  <Box
+    sx={{
+      position: 'absolute',
+      bottom: 60,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      animation: 'bounce 2s infinite',
+      '@keyframes bounce': {
+        '0%, 20%, 50%, 80%, 100%': {
+          transform: 'translateY(0) translateX(-50%)',
+        },
+        '40%': {
+          transform: 'translateY(-20px) translateX(-50%)',
+        },
+        '60%': {
+          transform: 'translateY(-10px) translateX(-50%)',
+        },
+      },
+    }}
+  >
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7 10L12 15L17 10"
+        stroke="#4b644a"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </Box>
+);
+
 export default function HomePage() {
   return (
     <>
@@ -21,6 +60,7 @@ export default function HomePage() {
           alignItems: 'center',
           justifyContent: 'center',
           px: 2,
+          position: 'relative', // Add this for positioning the arrow
         }}
       >
         <Container maxWidth="md">
@@ -55,6 +95,7 @@ export default function HomePage() {
             </Box>
           </Paper>
         </Container>
+        <ScrollPrompt />
       </Box>
 
       {/* What is FarmWise Section */}
@@ -143,7 +184,7 @@ export default function HomePage() {
               ))}
             </Grid>
 
-            {/* SDG Connection - Modified Version */}
+            {/* SDG Connection */}
 <Box sx={{ 
   mt: 6,
   p: 3,
