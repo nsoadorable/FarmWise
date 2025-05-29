@@ -1,28 +1,36 @@
 const express = require('express');
+const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('./db');
-const adminAuth = require('./adminAuth'); // Add this line after other imports
+const adminAuth = require('./adminAuth');
 require('dotenv').config();
 
 const app = express();
-app.use(cors(), express.json());
 
-// SIGN UP
+// ✅ Middlewares
+app.use(cors());         // Enables CORS for cross-origin requests (frontend → backend)
+app.use(express.json()); // Parses incoming JSON payloads
+
+// SIGN UP (Updated)
 app.post('/api/auth/signup', async (req, res) => {
-  const { email, password } = req.body;
+  console.log('Received request:', req.body);
+  const { firstName, lastName, email, password } = req.body;
+
   // Validation
-  if (!/\S+@\S+\.\S+/.test(email) || password.length < 6) {
-    return res.status(400).json({ error: 'Invalid email or password too short.' });
+  if (!firstName || !lastName || !/\S+@\S+\.\S+/.test(email) || password.length < 6) {
+    return res.status(400).json({ error: 'Invalid input. Ensure all fields are correctly filled.' });
   }
-  // Hash
+
+  // Hash password
   const hash = await bcrypt.hash(password, 12);
+
   try {
     const [result] = await pool.query(
-      'INSERT INTO users (email, password_hash) VALUES (?, ?)',
-      [email, hash]
+      'INSERT INTO users (first_name, last_name, email, password_hash) VALUES (?, ?, ?, ?)',
+      [firstName, lastName, email, hash]
     );
-    res.status(201).json({ id: result.insertId, email });
+    res.status(201).json({ id: result.insertId, firstName, lastName, email });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({ error: 'Email already in use.' });

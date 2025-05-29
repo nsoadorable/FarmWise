@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -13,6 +13,19 @@ import AdminCommunityHub from './AdminCommunityHub';
 
 export default function AdminDashboard({ onLogout }) {
   const [panel, setPanel] = useState('community');
+
+  useEffect(() => {
+    // Optional: redirect or alert if token is missing
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      onLogout();
+    }
+  }, [onLogout]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken'); // ✅ Clear token on logout
+    onLogout();
+  };
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f7f3' }}>
@@ -69,12 +82,12 @@ export default function AdminDashboard({ onLogout }) {
                 }}
               />
             </ListItem>
-            
-            {/* Add more admin panels here */}
-            
+
+            {/* Additional panels can go here */}
+
             <ListItem sx={{ mt: 2, px: 2 }}>
               <Button
-                onClick={onLogout}
+                onClick={handleLogout}
                 fullWidth
                 variant="outlined"
                 sx={{

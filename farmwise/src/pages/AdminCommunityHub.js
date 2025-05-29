@@ -1,174 +1,125 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import {
+  Box,
   Typography,
   List,
   ListItem,
   ListItemText,
   IconButton,
-  Box,
+  TextField,
   Button,
-  Paper,
-  CircularProgress,
-  Alert,
-  Divider
+  Divider,
+  Alert
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BlockIcon from '@mui/icons-material/Block';
-import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function AdminCommunityHub() {
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [filter, setFilter] = useState('');
+  const [bannedEmail, setBannedEmail] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const fetchComments = async () => {
+  const token = localStorage.getItem('adminToken');
+
+  // Fix: Properly define fetchComments with useCallback
+  const fetchComments = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
-      const res = await axios.get('http://localhost:5000/api/comments');
+      const res = await axios.get(`/api/comments${filter ? `?filter=${filter}` : ''}`);
       setComments(res.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load comments');
-    } finally {
-      setLoading(false);
+      setError('Failed to fetch comments');
     }
-  };
+  }, [filter]); // Ensures function updates only when filter changes
 
-  useEffect(() => { fetchComments(); }, []);
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]); // Ensures it runs when fetchComments updates
 
-  const handleDelete = async id => {
+  async function handleDelete(id) {
     try {
-      await axios.delete(`http://localhost:5000/api/comments/${id}`);
-      fetchComments();
+      await axios.delete(`/api/comments/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setComments((prev) => prev.filter((c) => c.id !== id));
+      setSuccess('Comment deleted successfully');
     } catch (err) {
       setError('Failed to delete comment');
     }
-  };
+  }
 
-  const handleBan = async email => {
+  const handleBan = async () => {
     try {
-      await axios.post('http://localhost:5000/api/admin/ban', { email });
-      fetchComments();
+      await axios.post(
+        '/api/admin/ban',
+        { email: bannedEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSuccess(`User ${bannedEmail} has been banned`);
+      setBannedEmail('');
     } catch (err) {
       setError('Failed to ban user');
     }
   };
 
-  const filtered = comments.filter(c => c.comment.toLowerCase().includes('community'));
-
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        mb: 3
-      }}>
-        <Typography 
-          variant="h4" 
-          sx={{ 
-            fontFamily: "'Sitka Semibold', serif",
-            color: '#4b644a'
-          }}
-        >
-          Community Moderation
-        </Typography>
-        <Button
-          onClick={fetchComments}
-          startIcon={<RefreshIcon />}
-          sx={{
-            fontFamily: "'Sitka Semibold', serif",
-            color: '#4b644a',
-            borderColor: '#4b644a',
-            '&:hover': {
-              backgroundColor: 'rgba(75, 100, 74, 0.1)'
-            }
-          }}
-          variant="outlined"
-        >
-          Refresh
-        </Button>
+    <Box>
+      <Typography variant="h4" gutterBottom fontFamily="'Sitka Semibold', serif">
+        Community Hub Management
+      </Typography>
+
+      {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
+      {success && <Alert severity="success" onClose={() => setSuccess('')}>{success}</Alert>}
+
+      <Box sx={{ my: 2 }}>
+        <TextField
+          label="Filter Comments"
+          fullWidth
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          sx={{ mb: 2 }}
+        />
       </Box>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 3, fontFamily: "'Merriweather', serif" }}>
-          {error}
-        </Alert>
-      )}
+      <List>
+        {comments.map((comment) => (
+          <React.Fragment key={comment.id}>
+            <ListItem
+              secondaryAction={
+                <IconButton edge="end" onClick={() => handleDelete(comment.id)} color="error">
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
+              <ListItemText primary={comment.comment} secondary={comment.email} />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
+      </List>
 
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress sx={{ color: '#4b644a' }} />
-        </Box>
-      ) : filtered.length === 0 ? (
-        <Paper elevation={0} sx={{ p: 3, textAlign: 'center', backgroundColor: '#f5f7f3' }}>
-          <Typography variant="body1" sx={{ fontFamily: "'Merriweather', serif" }}>
-            No community comments to moderate
-          </Typography>
-        </Paper>
-      ) : (
-        <Paper elevation={0} sx={{ overflow: 'hidden', border: '1px solid #e0e0e0' }}>
-          <List sx={{ p: 0 }}>
-            {filtered.map((c, index) => (
-              <React.Fragment key={c.id}>
-                <ListItem
-                  sx={{
-                    backgroundColor: index % 2 === 0 ? '#ffffff' : '#f9f9f9',
-                    '&:hover': {
-                      backgroundColor: '#f5f7f3'
-                    }
-                  }}
-                  secondaryAction={
-                    <Box>
-                      <IconButton 
-                        onClick={() => handleDelete(c.id)} 
-                        sx={{ color: '#d32f2f' }}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                      {c.email && (
-                        <IconButton 
-                          onClick={() => handleBan(c.email)} 
-                          sx={{ color: '#ff9800' }}
-                          aria-label="ban"
-                        >
-                          <BlockIcon />
-                        </IconButton>
-                      )}
-                    </Box>
-                  }
-                >
-                  <ListItemText
-                    primary={
-                      <Typography 
-                        sx={{ 
-                          fontFamily: "'Sitka Semibold', serif",
-                          color: '#4b644a'
-                        }}
-                      >
-                        {c.name} {c.email && `(${c.email})`}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography 
-                        sx={{ 
-                          fontFamily: "'Merriweather', serif",
-                          color: '#341c1c'
-                        }}
-                      >
-                        {c.comment}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-                {index < filtered.length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </List>
-        </Paper>
-      )}
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h6" gutterBottom fontFamily="'Sitka Semibold', serif">
+          Ban a User
+        </Typography>
+        <TextField
+          label="User Email"
+          fullWidth
+          value={bannedEmail}
+          onChange={(e) => setBannedEmail(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <Button
+          variant="contained"
+          startIcon={<BlockIcon />}
+          onClick={handleBan}
+          disabled={!bannedEmail}
+        >
+          Ban User
+        </Button>
+      </Box>
     </Box>
   );
 }
