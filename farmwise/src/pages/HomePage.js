@@ -40,6 +40,44 @@ const ScrollPrompt = () => (
   </Box>
 );
 
+const PhotoCredit = () => (
+  <Box
+    sx={{
+      position: 'absolute',
+      top: 16, // Changed from bottom to top
+      right: 16,
+      backgroundColor: 'rgba(0, 0, 0, 0.25)',
+      backdropFilter: 'blur(4px)',
+      borderRadius: '4px',
+      px: 1.5,
+      py: 0.5,
+      transition: 'background-color 0.2s ease',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)'
+      }
+    }}
+  >
+    <Typography 
+      variant="caption" 
+      sx={{
+        color: 'rgba(255, 255, 255, 0.85)',
+        fontSize: '0.7rem',
+        fontFamily: 'Arial, sans-serif',
+        '& a': {
+          color: 'rgba(255, 255, 255, 0.9)',
+          textDecoration: 'none',
+          borderBottom: '1px dotted rgba(255, 255, 255, 0.5)',
+          '&:hover': {
+            borderBottom: '1px solid white'
+          }
+        }
+      }}
+    >
+      Photo by <a href="https://www.pexels.com/@quang-nguyen-vinh-222549" target="_blank" rel="noopener noreferrer">Quang Nguyen Vinh</a> on <a href="https://www.pexels.com/photo/aerial-photography-of-beautiful-paddy-field-6872748/" target="_blank" rel="noopener noreferrer">Pexels</a>
+    </Typography>
+  </Box>
+);
+
 export default function HomePage() {
   return (
     <>
@@ -96,9 +134,10 @@ export default function HomePage() {
           </Paper>
         </Container>
         <ScrollPrompt />
+        <PhotoCredit /> {/* Added the photo credit component */}
       </Box>
 
-      {/* What is FarmWise Section */}
+      {/* Rest of your component remains the same */}
       <Box sx={{ py: 8, bgcolor: '#f5f0ec' }}>
         <Container maxWidth="md">
           <Paper elevation={3} sx={{ p: 4, bgcolor: 'rgba(255, 255, 255, 0.9)' }}>
@@ -185,62 +224,62 @@ export default function HomePage() {
             </Grid>
 
             {/* SDG Connection */}
-<Box sx={{ 
-  mt: 6,
-  p: 3,
-  bgcolor: '#f0f7ed',
-  borderRadius: 1,
-  borderLeft: '4px solid #4b644a'
-}}>
-  <Typography variant="h6" sx={{ fontFamily: 'Sitka Semibold', mb: 1 }}>
-    Our Goals Align With Global Sustainable Development:
-  </Typography>
-  <Typography variant="body1" sx={{ mb: 2 }}>
-    FarmWise supports the United Nations Sustainable Development Goals by focusing on:
-  </Typography>
-  <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-    <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, mb: 1 }}>
-      <Box sx={{ 
-        width: 40, 
-        height: 40, 
-        bgcolor: '#4b644a', 
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '50%',
-        mr: 1,
-        fontFamily: 'Sitka Semibold'
-      }}>
-        2
-      </Box>
-      <Box>
-        <Typography sx={{ fontWeight: 600 }}>Zero Hunger</Typography>
-        <Typography variant="body2">Through improved agricultural education</Typography>
-      </Box>
-    </Box>
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-      <Box sx={{ 
-        width: 40, 
-        height: 40, 
-        bgcolor: '#4b644a', 
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '50%',
-        mr: 1,
-        fontFamily: 'Sitka Semibold'
-      }}>
-        4
-      </Box>
-      <Box>
-        <Typography sx={{ fontWeight: 600 }}>Quality Education</Typography>
-        <Typography variant="body2">By democratizing farming knowledge</Typography>
-      </Box>
-    </Box>
-  </Box>
-</Box>
+            <Box sx={{ 
+              mt: 6,
+              p: 3,
+              bgcolor: '#f0f7ed',
+              borderRadius: 1,
+              borderLeft: '4px solid #4b644a'
+            }}>
+              <Typography variant="h6" sx={{ fontFamily: 'Sitka Semibold', mb: 1 }}>
+                Our Goals Align With Global Sustainable Development:
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                FarmWise supports the United Nations Sustainable Development Goals by focusing on:
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mr: 3, mb: 1 }}>
+                  <Box sx={{ 
+                    width: 40, 
+                    height: 40, 
+                    bgcolor: '#4b644a', 
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    mr: 1,
+                    fontFamily: 'Sitka Semibold'
+                  }}>
+                    2
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontWeight: 600 }}>Zero Hunger</Typography>
+                    <Typography variant="body2">Through improved agricultural education</Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Box sx={{ 
+                    width: 40, 
+                    height: 40, 
+                    bgcolor: '#4b644a', 
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '50%',
+                    mr: 1,
+                    fontFamily: 'Sitka Semibold'
+                  }}>
+                    4
+                  </Box>
+                  <Box>
+                    <Typography sx={{ fontWeight: 600 }}>Quality Education</Typography>
+                    <Typography variant="body2">By democratizing farming knowledge</Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
           </Paper>
         </Container>
       </Box>
