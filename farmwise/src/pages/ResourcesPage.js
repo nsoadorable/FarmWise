@@ -27,12 +27,11 @@ export default function ResourcesPage() {
 
         const data = await response.json();
         
-        // Filter out videos here (remove items where type === 'video')
         const educationalResources = data.filter(item => 
           (item.categories?.includes('education') || item.type === 'guide' || item.type === 'research' ||
            item.title?.toLowerCase().includes('how to') ||
            item.description?.toLowerCase().includes('tutorial')) &&
-          item.type !== 'video' // exclude videos
+          item.type !== 'video'
         );
 
         setResources(educationalResources);
@@ -47,12 +46,10 @@ export default function ResourcesPage() {
     fetchResources();
   }, []);
 
-  // Filter resources by type except video removed
   const filteredResources = filter === 'all' 
     ? resources 
     : resources.filter(resource => resource.type === filter);
 
-  // Mock data without video items
   const mockResources = [
     {
       id: 1,
@@ -64,48 +61,101 @@ export default function ResourcesPage() {
       categories: ['education', 'sustainability'],
       level: 'beginner'
     },
-    // Removed video mock items
-    // Add other non-video mock items here as needed
   ];
 
-  // Use mock data if no resources loaded
   const displayResources = resources.length > 0 ? filteredResources : mockResources;
 
   return (
-    <Container sx={{ my: 4 }}>
-      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+    <Container 
+      maxWidth="lg" 
+      sx={{ 
+        my: 4,
+        fontFamily: "'Merriweather', serif"
+      }}
+    >
+      <Typography 
+        variant="h3" 
+        gutterBottom 
+        sx={{ 
+          mb: 4,
+          fontFamily: "'Sitka Semibold', serif",
+          color: '#1d2c12',
+          textAlign: 'center'
+        }}
+      >
         Educational Farming Resources
       </Typography>
 
-      {/* Filter chips without Videos */}
-      <Box sx={{ mb: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+      {/* Filter chips */}
+      <Box sx={{ 
+        mb: 4, 
+        display: 'flex', 
+        gap: 1, 
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+      }}>
         <Chip 
           label="All" 
           onClick={() => setFilter('all')} 
-          color={filter === 'all' ? 'primary' : 'default'} 
+          variant={filter === 'all' ? 'filled' : 'outlined'}
+          sx={{
+            fontFamily: "'Merriweather', serif",
+            backgroundColor: filter === 'all' ? '#4b644a' : 'transparent',
+            color: filter === 'all' ? '#fff' : '#4b644a',
+            borderColor: '#4b644a',
+            '&:hover': {
+              backgroundColor: filter === 'all' ? '#3a4f39' : 'rgba(75, 100, 74, 0.1)'
+            }
+          }}
         />
         <Chip 
           label="Guides" 
           onClick={() => setFilter('guide')} 
-          color={filter === 'guide' ? 'primary' : 'default'} 
+          variant={filter === 'guide' ? 'filled' : 'outlined'}
+          sx={{
+            fontFamily: "'Merriweather', serif",
+            backgroundColor: filter === 'guide' ? '#4b644a' : 'transparent',
+            color: filter === 'guide' ? '#fff' : '#4b644a',
+            borderColor: '#4b644a',
+            '&:hover': {
+              backgroundColor: filter === 'guide' ? '#3a4f39' : 'rgba(75, 100, 74, 0.1)'
+            }
+          }}
         />
         <Chip 
           label="Research" 
           onClick={() => setFilter('research')} 
-          color={filter === 'research' ? 'primary' : 'default'} 
+          variant={filter === 'research' ? 'filled' : 'outlined'}
+          sx={{
+            fontFamily: "'Merriweather', serif",
+            backgroundColor: filter === 'research' ? '#4b644a' : 'transparent',
+            color: filter === 'research' ? '#fff' : '#4b644a',
+            borderColor: '#4b644a',
+            '&:hover': {
+              backgroundColor: filter === 'research' ? '#3a4f39' : 'rgba(75, 100, 74, 0.1)'
+            }
+          }}
         />
       </Box>
 
       {loading ? (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
+        <Box display="flex" justifyContent="center" my={6}>
+          <CircularProgress sx={{ color: '#4b644a' }} />
         </Box>
       ) : error ? (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert 
+          severity="error" 
+          sx={{ 
+            mb: 4,
+            fontFamily: "'Merriweather', serif",
+            backgroundColor: '#f8d7da',
+            color: '#721c24'
+          }}
+        >
           {error} - Showing sample resources instead
         </Alert>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           {displayResources.map((resource) => (
             <Grid item xs={12} sm={6} md={4} key={resource.id || resource.url}>
               <ResourceCard
