@@ -5,34 +5,150 @@ import caseStudies from '../data/philEcoCaseStudies';
 
 export default function EcoPracticesPage() {
   return (
-    <Container sx={{ my: 4, backgroundColor: '#F5F0EB', borderRadius: 3, py: 4, px: 3, fontFamily: 'Merriweather, serif' }}>
-      <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Sitka Semibold, serif', color: '#341c1c' }}>
+    <Container 
+      maxWidth="md" 
+      sx={{ 
+        my: 4, 
+        fontFamily: "'Merriweather', serif",
+        borderRadius: 2,
+        p: 3
+      }}
+    >
+      <Typography 
+        variant="h4" 
+        gutterBottom 
+        sx={{ 
+          fontFamily: "'Sitka Semibold', serif", 
+          color: '#4b644a',
+          mb: 3
+        }}
+      >
         Eco‑Friendly Farming Practices
       </Typography>
+
+      {/* Case Studies Grid */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {caseStudies.map(({ id, title, description, sourceUrl }) => (
           <Grid item xs={12} sm={6} md={4} key={id}>
-            <Card sx={{ backgroundColor: '#ffffffcc', boxShadow: 2, borderRadius: 4, height: '100%' }}>
+            <Card 
+              sx={{ 
+                height: '100%',
+                bgcolor: 'white',
+                borderRadius: 2,
+                boxShadow: 1,
+                transition: '0.3s',
+                '&:hover': {
+                  boxShadow: 3
+                }
+              }}
+            >
               <CardContent>
-                <Typography variant="h6" sx={{ fontFamily: 'Sitka Semibold, serif', color: '#4b644a' }}>{title}</Typography>
-                <Typography variant="body2" sx={{ mt: 1, color: '#341c1c' }}>{description}</Typography>
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    fontFamily: "'Sitka Semibold', serif", 
+                    color: '#4b644a',
+                    mb: 1
+                  }}
+                >
+                  {title}
+                </Typography>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: '#341c1c',
+                    fontFamily: "'Merriweather', serif"
+                  }}
+                >
+                  {description}
+                </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: 'flex-end' }}>
-                <Button size="small" href={sourceUrl} target="_blank" rel="noopener">View Details</Button>
+                <Button 
+                  size="small" 
+                  href={sourceUrl} 
+                  target="_blank" 
+                  rel="noopener"
+                  sx={{
+                    fontFamily: "'Sitka Semibold', serif",
+                    color: '#4b644a',
+                    '&:hover': {
+                      color: '#84c461'
+                    }
+                  }}
+                >
+                  View Details
+                </Button>
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
-      <Box sx={{ height: 320, backgroundColor: '#ffffffcc', borderRadius: 3, p: 2, boxShadow: 1 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={caseStudies} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-            <XAxis dataKey="title" tick={{ fontSize: 12, fontFamily: 'Merriweather, serif' }} />
-            <YAxis tick={{ fontSize: 12, fontFamily: 'Merriweather, serif' }} />
-            <Tooltip />
-            <Legend wrapperStyle={{ fontFamily: 'Merriweather, serif', fontSize: 12 }} />
-            <Bar dataKey="costSavings" name="Cost Savings (%)" barSize={20} fill="#84c461" />
-            <Bar dataKey="yieldIncrease" name="Yield Increase (%)" barSize={20} fill="#b4654a" />
+
+      {/* Chart Box */}
+      <Box 
+        sx={{ 
+          height: 320, 
+          bgcolor: 'white', 
+          borderRadius: 2, 
+          p: 3, 
+          boxShadow: 1,
+          mb: 4
+        }}
+      >
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            fontFamily: "'Sitka Semibold', serif", 
+            color: '#4b644a',
+            mb: 2
+          }}
+        >
+          Practice Impact Comparison
+        </Typography>
+        <ResponsiveContainer width="100%" height="80%">
+          <BarChart 
+            data={caseStudies} 
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <XAxis 
+              dataKey="title" 
+              tick={{ 
+                fontFamily: "'Merriweather', serif",
+                fontSize: 12 
+              }} 
+            />
+            <YAxis 
+              tick={{ 
+                fontFamily: "'Merriweather', serif",
+                fontSize: 12 
+              }} 
+            />
+            <Tooltip 
+              contentStyle={{
+                fontFamily: "'Merriweather', serif",
+                borderRadius: 2,
+                borderColor: '#4b644a'
+              }}
+            />
+            <Legend 
+              wrapperStyle={{ 
+                fontFamily: "'Merriweather', serif",
+                paddingTop: '20px'
+              }} 
+            />
+            <Bar 
+              dataKey="costSavings" 
+              name="Cost Savings (%)" 
+              barSize={20} 
+              fill="#985f46" 
+            />
+            <Bar 
+              dataKey="yieldIncrease" 
+              name="Yield Increase (%)" 
+              barSize={20} 
+              fill="#4b644a" 
+            />
           </BarChart>
         </ResponsiveContainer>
       </Box>
