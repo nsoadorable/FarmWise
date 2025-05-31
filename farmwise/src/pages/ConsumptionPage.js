@@ -21,6 +21,18 @@ import {
   Legend
 } from 'recharts';
 
+// Styles
+const headingStyle = {
+  fontFamily: 'Sitka Text, serif',
+  fontWeight: 600,
+  marginBottom: '1rem'
+};
+
+const bodyStyle = {
+  fontFamily: 'Merriweather, serif',
+  lineHeight: 1.6
+};
+
 // Philippine seasonal produce data
 const seasonalData = [
   { month: 'January', items: 10, fruits: 'Mango, Pineapple, Banana, Watermelon, Papaya, Coconut, Citrus, Guava', vegetables: 'Ampalaya, Eggplant' },
@@ -46,7 +58,7 @@ export default function ConsumptionPage() {
     'Store fruits and veggies properly to extend freshness.',
     'Use leftovers creatively—soups, stir‑fries, and smoothies.',
     'Compost food scraps instead of throwing them away.',
-    'Buy "ugly" produce at a discount to reduce waste.' 
+    'Buy “ugly” produce at a discount to reduce waste.'
   ];
 
   const handlePledgeSubmit = e => {
@@ -58,19 +70,12 @@ export default function ConsumptionPage() {
     if (active && payload && payload.length) {
       const { month, fruits, vegetables } = payload[0].payload;
       return (
-        <Box sx={{ 
-          bgcolor: '#f5f7f3', 
-          p: 2, 
-          borderRadius: 1, 
-          boxShadow: 3, 
-          border: '1px solid #ddd',
-          fontFamily: "'Merriweather', serif"
-        }}>
-          <Typography variant="subtitle2" sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a' }}>{month}</Typography>
-          <Typography variant="body2" sx={{ fontFamily: "'Merriweather', serif", color: '#341c1c' }}>Fruits:</Typography>
-          <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1, fontFamily: "'Merriweather', serif", color: '#4b644a' }}>{fruits}</Typography>
-          <Typography variant="body2" sx={{ fontFamily: "'Merriweather', serif", color: '#341c1c' }}>Vegetables:</Typography>
-          <Typography variant="body2" sx={{ fontStyle: 'italic', fontFamily: "'Merriweather', serif", color: '#4b644a' }}>{vegetables}</Typography>
+        <Box sx={{ bgcolor: 'background.paper', p: 2, borderRadius: 1, boxShadow: 3, border: '1px solid #ddd' }}>
+          <Typography variant="subtitle2">{month}</Typography>
+          <Typography variant="body2">Fruits:</Typography>
+          <Typography variant="body2" sx={{ fontStyle: 'italic', mb: 1 }}>{fruits}</Typography>
+          <Typography variant="body2">Vegetables:</Typography>
+          <Typography variant="body2" sx={{ fontStyle: 'italic' }}>{vegetables}</Typography>
         </Box>
       );
     }
@@ -78,51 +83,23 @@ export default function ConsumptionPage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ my: 4, fontFamily: "'Merriweather', serif" }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{ 
-          fontFamily: "'Sitka Semibold', serif", 
-          color: '#4b644a',
-          mb: 3
-        }}
-      >
+    <Container sx={{ my: 4 }}>
+      <Typography variant="h4" gutterBottom sx={headingStyle}>
         Responsible Consumption in the Philippines
       </Typography>
 
       {/* Seasonal Produce Chart */}
-      <Box sx={{ width: '100%', height: 300, mb: 4 }}>
-        <Typography 
-          variant="h6" 
-          gutterBottom 
-          sx={{ 
-            fontFamily: "'Sitka Semibold', serif", 
-            color: '#4b644a',
-            mb: 2
-          }}
-        >
+      <Box sx={{ width: '100%', height: 300, mb: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
           Philippine Seasonal Produce by Month
         </Typography>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={seasonalData}>
-            <XAxis 
-              dataKey="month" 
-              tick={{ fontFamily: "'Merriweather', serif", fontSize: 12 }}
-            />
-            <YAxis 
-              tick={{ fontFamily: "'Merriweather', serif", fontSize: 12 }}
-            />
+            <XAxis dataKey="month" />
+            <YAxis />
             <Tooltip content={<CustomTooltip />} />
-            <Legend 
-              wrapperStyle={{ fontFamily: "'Merriweather', serif" }}
-            />
-            <Bar 
-              dataKey="items" 
-              name="Number of Produce Items" 
-              barSize={20} 
-              fill="#985f46" 
-            />
+            <Legend />
+            <Bar dataKey="items" name="Number of Produce Items" barSize={20} fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
       </Box>
@@ -132,14 +109,9 @@ export default function ConsumptionPage() {
         <Button
           size="small"
           component="a"
-          href="https://da.gov.ph/seasonal-produce-calendar"
+          href="https://www.discoverthephilippines.com/calendar-of-seasonal-fruits-in-the-philippines/"
           target="_blank"
           rel="noopener"
-          sx={{
-            fontFamily: "'Sitka Semibold', serif",
-            color: '#4b644a',
-            '&:hover': { color: '#84c461' }
-          }}
         >
           View Official Seasonal Calendar
         </Button>
@@ -147,36 +119,15 @@ export default function ConsumptionPage() {
 
       {/* Sustainable Eating Tips */}
       <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h6" 
-          gutterBottom 
-          sx={{ 
-            fontFamily: "'Sitka Semibold', serif", 
-            color: '#4b644a',
-            mb: 2
-          }}
-        >
+        <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
           Top Tips for Reducing Food Waste
         </Typography>
         <Grid container spacing={2}>
           {tips.map((tip, i) => (
             <Grid item xs={12} sm={6} key={i}>
               <List>
-                <ListItem sx={{ 
-                  bgcolor: 'white', 
-                  borderRadius: 2, 
-                  boxShadow: 1,
-                  '&:hover': { boxShadow: 2 }
-                }}>
-                  <ListItemText 
-                    primary={tip} 
-                    primaryTypographyProps={{ 
-                      sx: { 
-                        fontFamily: "'Merriweather', serif", 
-                        color: '#341c1c' 
-                      } 
-                    }} 
-                  />
+                <ListItem sx={{ bgcolor: '#ffffffcc', borderRadius: 2 }}>
+                  <ListItemText primary={tip} primaryTypographyProps={{ sx: { ...bodyStyle, color: '#341c1c' } }} />
                 </ListItem>
               </List>
             </Grid>
@@ -186,15 +137,7 @@ export default function ConsumptionPage() {
 
       {/* Pledge Form */}
       <Box>
-        <Typography 
-          variant="h6" 
-          gutterBottom 
-          sx={{ 
-            fontFamily: "'Sitka Semibold', serif", 
-            color: '#4b644a',
-            mb: 2
-          }}
-        >
+        <Typography variant="h6" gutterBottom sx={{ ...headingStyle, color: '#4b644a' }}>
           Take the Pledge
         </Typography>
         {!submitted ? (
@@ -207,80 +150,38 @@ export default function ConsumptionPage() {
               rows={2}
               value={pledge}
               onChange={e => setPledge(e.target.value)}
-              sx={{ 
-                mb: 2, 
-                backgroundColor: 'white', 
-                borderRadius: 1,
-                '& .MuiOutlinedInput-root': {
-                  fontFamily: "'Merriweather', serif"
-                }
-              }}
+              sx={{ mb: 2, backgroundColor: '#ffffffcc', borderRadius: 1 }}
               required
+              InputProps={{ sx: { fontFamily: 'Merriweather, serif' } }}
             />
             <Button
               type="submit"
               variant="contained"
               sx={{
-                bgcolor: '#4b644a',
-                fontFamily: "'Sitka Semibold', serif",
-                '&:hover': { bgcolor: '#84c461' }
+                backgroundColor: '#4b644a',
+                fontFamily: 'Sitka Text, serif',
+                fontWeight: 600,
+                '&:hover': { backgroundColor: '#3a5039' }
               }}
             >
               Submit Pledge
             </Button>
           </Box>
         ) : (
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              fontFamily: "'Merriweather', serif", 
-              color: '#4b644a',
-              fontStyle: 'italic'
-            }}
-          >
-            Thank you for your pledge! "{pledge}"
+          <Typography variant="body1" sx={{ ...bodyStyle, color: '#4b644a' }}>
+            Thank you for your pledge! “{pledge}”
           </Typography>
         )}
       </Box>
 
       {/* Sources */}
       <Box sx={{ mt: 4 }}>
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            fontFamily: "'Merriweather', serif",
-            color: '#341c1c'
-          }}
-        >
+        <Typography variant="body2" sx={{ fontFamily: 'Merriweather, serif' }}>
           Sources: 
-          <Button 
-            component="a" 
-            href="https://da.gov.ph/agriculture-calendar" 
-            target="_blank" 
-            rel="noopener" 
-            size="small" 
-            sx={{ 
-              textTransform: 'none', 
-              ml: 1,
-              fontFamily: "'Merriweather', serif",
-              color: '#4b644a'
-            }}
-          >
+          <Button component="a" href="https://www.scribd.com/document/424348306/Philippine-Fruit-Calendar" target="_blank" rel="noopener" size="small" sx={{ textTransform: 'none', ml: 1 }}>
             DA Agricultural Calendar
           </Button>
-          <Button 
-            component="a" 
-            href="https://www.philmech.gov.ph/" 
-            target="_blank" 
-            rel="noopener" 
-            size="small" 
-            sx={{ 
-              textTransform: 'none', 
-              ml: 1,
-              fontFamily: "'Merriweather', serif",
-              color: '#4b644a'
-            }}
-          >
+          <Button component="a" href="https://www.philmech.gov.ph/" target="_blank" rel="noopener" size="small" sx={{ textTransform: 'none', ml: 1 }}>
             PHilMech
           </Button>
         </Typography>
