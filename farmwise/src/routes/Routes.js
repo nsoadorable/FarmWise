@@ -27,6 +27,7 @@ export default function AppRoutes() {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/create account" element={<LoginPage/>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/admin" element={
         adminToken

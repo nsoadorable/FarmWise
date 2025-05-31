@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // <-- added useNavigate import
 import axios from 'axios';
 
 export default function SignupPage() {
@@ -11,9 +11,11 @@ export default function SignupPage() {
     password: '',
     confirmPassword: ''
   });
+
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
-  const [success, setSuccess] = useState(false);
+  // Removed success state because we'll redirect instead
+  const navigate = useNavigate();  // <-- initialize useNavigate
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,7 +31,7 @@ export default function SignupPage() {
     if (!form.email) newErrors.email = 'Email is required';
     else if (!emailPattern.test(form.email)) newErrors.email = 'Enter a valid email';
     if (!form.password) newErrors.password = 'Password is required';
-    else if (form.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    else if (form.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
     if (!form.confirmPassword) newErrors.confirmPassword = 'Please confirm your password';
     else if (form.password !== form.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     return newErrors;
@@ -42,6 +44,7 @@ export default function SignupPage() {
       setErrors(newErrors);
       return;
     }
+
     try {
       await axios.post('http://localhost:5000/api/auth/signup', {
         firstName: form.firstName,
@@ -49,19 +52,12 @@ export default function SignupPage() {
         email: form.email,
         password: form.password
       });
-      setSuccess(true);
+      // Redirect to login page after successful signup
+      navigate('/login');
     } catch (err) {
       setServerError(err.response?.data?.error || 'Signup failed.');
     }
   };
-
-  if (success) {
-    return (
-      <Container sx={{ mt: 4, maxWidth: 400, backgroundColor: '#f5f7f3', p: 4, borderRadius: 2, boxShadow: 3 }}>
-        <Alert severity="success">Account created! You can now <Link to="/login">log in</Link>.</Alert>
-      </Container>
-    );
-  }
 
   return (
     <Container
@@ -78,7 +74,11 @@ export default function SignupPage() {
       <Typography
         variant="h5"
         gutterBottom
-        sx={{ fontFamily: "'Sitka Semibold', serif", color: '#4b644a', textAlign: 'center' }}
+        sx={{
+          fontFamily: "'Sitka Semibold', serif",
+          color: '#4b644a',
+          textAlign: 'center'
+        }}
       >
         Sign Up
       </Typography>
@@ -173,7 +173,11 @@ export default function SignupPage() {
       <Typography
         variant="body2"
         align="center"
-        sx={{ mt: 2, color: '#4b644a', fontFamily: "'Merriweather', serif" }}
+        sx={{
+          mt: 2,
+          color: '#4b644a',
+          fontFamily: "'Merriweather', serif"
+        }}
       >
         Already have an account?{' '}
         <Link to="/login" style={{ color: '#84c461', fontWeight: 600, textDecoration: 'none' }}>
