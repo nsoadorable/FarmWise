@@ -13,7 +13,7 @@ export default function Navbar() {
 
   const mainLinks = [
     { path: '/', label: 'Home' },
-    { path: '/resources', label: 'Resources' },
+    // Removed resources link
     { path: '/eco-practices', label: 'Eco Practices' },
     { path: '/consumption', label: 'Consumption' },
     { path: '/community', label: 'Community' },
@@ -59,7 +59,7 @@ export default function Navbar() {
           <Typography 
             variant="h6" 
             sx={{ 
-              fontFamily: 'Sitka Semibold, serif',
+              fontFamily: "'Sitka Semibold', serif",
               color: '#fff',
               cursor: 'pointer',
               '&:hover': {
@@ -80,7 +80,7 @@ export default function Navbar() {
               to={link.path}
               sx={{ 
                 color: '#fff', 
-                fontFamily: 'Merriweather, serif', 
+                fontFamily: "'Merriweather', serif", 
                 '&:hover': { 
                   backgroundColor: '#84c461', 
                   color: '#341c1c' 
@@ -99,7 +99,7 @@ export default function Navbar() {
                   to={link.path}
                   sx={{ 
                     color: '#fff', 
-                    fontFamily: 'Merriweather, serif', 
+                    fontFamily: "'Merriweather', serif", 
                     '&:hover': { 
                       backgroundColor: '#84c461', 
                       color: '#341c1c' 
@@ -115,7 +115,7 @@ export default function Navbar() {
                   onClick={link.action}
                   sx={{ 
                     color: '#fff', 
-                    fontFamily: 'Merriweather, serif', 
+                    fontFamily: "'Merriweather', serif", 
                     '&:hover': { 
                       backgroundColor: '#84c461', 
                       color: '#341c1c' 
